@@ -68,4 +68,22 @@ public class ConfigRest {
     public GenericWrapper getOrganizationNameRu() {
         return GenericWrapper.wrap(configBean.get("orgnameru"));
     }
+
+    @GET
+    @Path("/org/textkz")
+    public GenericWrapper getOrganizationTextKz() {
+        return GenericWrapper.wrap(configBean.get("orgtextkz"));
+    }
+
+    @GET
+    @Path("/org/texten")
+    public GenericWrapper getOrganizationTextEn() {
+        return GenericWrapper.wrap(configBean.get("orgtexten"));
+    }
+
+    @GET
+    @Path("/org/textru")
+    public GenericWrapper getOrganizationTextRu() {
+        return GenericWrapper.wrap(configBean.get("orgtextru"));
+    }
 }
