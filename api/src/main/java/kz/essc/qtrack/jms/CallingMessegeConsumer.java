@@ -14,7 +14,7 @@ public class CallingMessegeConsumer implements MessageListener {
     static ArrayList<String> files = new ArrayList<>();
     private static int index = 0;
      String relPath = "/home/alpamys/Downloads/numbers";
-//    String relPath = "E:/numbers";
+//    String relPath = "D:/server/numbers";
     String path = relPath+"/en/rachel/wav/";
     String format = ".wav";
 
