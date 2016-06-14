@@ -3,9 +3,7 @@ package kz.essc.qtrack.kiosk;
 import kz.essc.qtrack.client.*;
 import kz.essc.qtrack.client.Process;
 import kz.essc.qtrack.core.LangBean;
-import kz.essc.qtrack.line.Line;
-import kz.essc.qtrack.line.LineBean;
-import kz.essc.qtrack.line.LineWrapper;
+import kz.essc.qtrack.line.*;
 import kz.essc.qtrack.operator.OperatorBean;
 import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.process.ProcessWrapper;
@@ -20,7 +18,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @RequestScoped
@@ -177,9 +178,9 @@ public class KioskBean {
         Client client = clientBean.add(lineId, clientWrapper);
         Line line = lineBean.get(lineId);
 
-        int begin = clientBean.toMinutes(line.getBegin());
-        int end = clientBean.toMinutes(line.getEnd());
-        int now = clientBean.toMinutes(new Date());
+//        int begin = clientBean.toMinutes(line.getBegin());
+//        int end = clientBean.toMinutes(line.getEnd());
+//        int now = clientBean.toMinutes(new Date());
 
 //        if (now < begin)
 //            return -1L;
@@ -214,11 +215,78 @@ public class KioskBean {
     public boolean initLineCounter(Long lineId) {
         Line line = lineBean.get(lineId);
 
-        line.setCounter(0);
-        em.merge(line);
+        if (line.getIsRaw()) {
+            line.setCounter(0);
+            em.merge(line);
+        }
+        else {
+            Date now = new Date();
+            for (int i=0; i<=14; i++) {
+                Date date = new Date();
+                date.setDate(now.getDate() + i);
+                Calendar calendar = new GregorianCalendar();
+                calendar.setTime(date);
+                int day = calendar.get(Calendar.DAY_OF_YEAR);
+                int year = 1900 + date.getYear();
 
+                long timingId = 0;
+                List<LineAppointmentTiming> timingList = (List<LineAppointmentTiming>) em.createQuery(
+                        "select t from LineAppointmentTiming t " +
+                                "where t.year = :year " +
+                                "and t.day = :day ")
+                        .setParameter("year", year)
+                        .setParameter("day", day)
+                        .getResultList();
+
+                if (timingList.isEmpty()) {
+                    generateTiming(year);
+
+                    LineAppointmentTiming timing = (LineAppointmentTiming) em.createQuery(
+                            "select t from LineAppointmentTiming t " +
+                                    "where t.year = :year " +
+                                    "and t.day = :day ")
+                            .setParameter("year", year)
+                            .setParameter("day", day)
+                            .getSingleResult();
+
+                    timingId = timing.getId();
+                }
+                else
+                    timingId = timingList.get(0).getId();
+
+                List<LineAppointment> list = (List<LineAppointment>) em.createQuery(
+                        "select l from LineAppointment l " +
+                                "where l.timingId = :time " +
+                                "and l.lineId = :line")
+                        .setParameter("time", timingId)
+                        .setParameter("line", line.getId())
+                        .getResultList();
+
+                if (list.isEmpty()) {
+                    LineAppointment la = new LineAppointment();
+                    la.setTimingId(timingId);
+                    la.setLineId(line.getId());
+
+                    em.persist(la);
+                }
+            }
+        }
         return true;
     }
 
+    @Transactional
+    private void generateTiming(int year) {
+        boolean isLeap = (year - 2016) % 4 == 0;
 
+        int days = 365;
+        if (isLeap)
+            days++;
+
+        for (int i=1; i<=days; i++) {
+            LineAppointmentTiming t = new LineAppointmentTiming();
+            t.setDay(i);
+            t.setYear(year);
+            em.persist(t);
+        }
+    }
 }

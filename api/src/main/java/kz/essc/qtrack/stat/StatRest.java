@@ -81,4 +81,9 @@ public class StatRest {
         return  OperatorWrapper.wrapInherited(statBean.getWorkedLineOperator(w));
     }
 
+    @POST
+    @Path("/process")
+    public List<ProcessWrapper> getProcesses(FilterWrapper w) {
+        return ProcessWrapper.wrap(statBean.get(w));
+    }
 }

@@ -24,6 +24,21 @@ public class Line implements Serializable {
     private LineHierarchy lineHierarchy;
     private Date begin;
     private Date end;
+    private Date suBegin;
+    private Date suEnd;
+    private Date moBegin;
+    private Date moEnd;
+    private Date tuBegin;
+    private Date tuEnd;
+    private Date weBegin;
+    private Date weEnd;
+    private Date thBegin;
+    private Date thEnd;
+    private Date frBegin;
+    private Date frEnd;
+    private Date stBegin;
+    private Date stEnd;
+    private Boolean isRaw = true; // raw - just queue, not row - by writing down the time
 
     @Id
     @Column(name="id_")
@@ -114,5 +129,125 @@ public class Line implements Serializable {
     }
     public void setEnd(Date end) {
         this.end = end;
+    }
+
+    @Column(name="su_begin_")
+    public Date getSuBegin() {
+        return suBegin;
+    }
+    public void setSuBegin(Date suBegin) {
+        this.suBegin = suBegin;
+    }
+
+    @Column(name="su_end_")
+    public Date getSuEnd() {
+        return suEnd;
+    }
+    public void setSuEnd(Date suEnd) {
+        this.suEnd = suEnd;
+    }
+
+    @Column(name="mo_begin_")
+    public Date getMoBegin() {
+        return moBegin;
+    }
+    public void setMoBegin(Date moBegin) {
+        this.moBegin = moBegin;
+    }
+
+    @Column(name="mo_end_")
+    public Date getMoEnd() {
+        return moEnd;
+    }
+    public void setMoEnd(Date moEnd) {
+        this.moEnd = moEnd;
+    }
+
+    @Column(name="tu_begin_")
+    public Date getTuBegin() {
+        return tuBegin;
+    }
+    public void setTuBegin(Date tuBegin) {
+        this.tuBegin = tuBegin;
+    }
+
+    @Column(name="tu_end_")
+    public Date getTuEnd() {
+        return tuEnd;
+    }
+    public void setTuEnd(Date tuEnd) {
+        this.tuEnd = tuEnd;
+    }
+
+    @Column(name="we_begin_")
+    public Date getWeBegin() {
+        return weBegin;
+    }
+    public void setWeBegin(Date weBegin) {
+        this.weBegin = weBegin;
+    }
+
+    @Column(name="we_end_")
+    public Date getWeEnd() {
+        return weEnd;
+    }
+    public void setWeEnd(Date weEnd) {
+        this.weEnd = weEnd;
+    }
+
+    @Column(name="th_begin_")
+    public Date getThBegin() {
+        return thBegin;
+    }
+    public void setThBegin(Date thBegin) {
+        this.thBegin = thBegin;
+    }
+
+    @Column(name="th_end_")
+    public Date getThEnd() {
+        return thEnd;
+    }
+    public void setThEnd(Date thEnd) {
+        this.thEnd = thEnd;
+    }
+
+    @Column(name="fr_begin_")
+    public Date getFrBegin() {
+        return frBegin;
+    }
+    public void setFrBegin(Date frBegin) {
+        this.frBegin = frBegin;
+    }
+
+    @Column(name="fr_end_")
+    public Date getFrEnd() {
+        return frEnd;
+    }
+    public void setFrEnd(Date frEnd) {
+        this.frEnd = frEnd;
+    }
+
+    @Column(name="st_begin_")
+    public Date getStBegin() {
+        return stBegin;
+    }
+    public void setStBegin(Date stBegin) {
+        this.stBegin = stBegin;
+    }
+
+    @Column(name="st_end_")
+    public Date getStEnd() {
+        return stEnd;
+    }
+    public void setStEnd(Date stEnd) {
+        this.stEnd = stEnd;
+    }
+
+    @Column(name="raw_")
+    public Boolean getIsRaw() {
+        return isRaw;
+    }
+    public void setIsRaw(Boolean isRaw) {
+        this.isRaw = isRaw;
     }
 }

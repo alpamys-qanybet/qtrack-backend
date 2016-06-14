@@ -28,6 +28,7 @@ public class CallingMessegeConsumer implements MessageListener {
 
 //                System.out.println("code " + code + " cabinet " + cabinet);
 
+//                TODO prefix is a number 99
                 boolean withPrefix = true, withPostfix = true;
                 switch (code.charAt(0)) {
                     case '0':

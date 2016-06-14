@@ -117,6 +117,7 @@ public class LineRest {
         }
     }
 
+    /* NOT USED */
     @GET
     @Path("/{id}/clients")
     public List<ClientWrapper> getClients(@PathParam("id") Long id) throws IOException {
@@ -127,6 +128,12 @@ public class LineRest {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
             return null;
         }
+    }
+
+    @POST
+    @Path("/{id}/clients/available")
+    public List<ClientWrapper> getClientsAvailableFiltered(@PathParam("id") Long id, FilterWrapper w) throws IOException {
+        return ClientWrapper.wrap(lineBean.getAvailableClients(id, w));
     }
 
     @GET

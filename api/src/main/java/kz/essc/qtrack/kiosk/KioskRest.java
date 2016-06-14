@@ -82,6 +82,12 @@ public class KioskRest {
         return GenericWrapper.wrap(kioskBean.initLineCounter(lineId));
     }
 
+    @POST
+    @Path("/line/{id}/clients/available")
+    public List<ClientWrapper> getClientsAvailableFiltered(@PathParam("id") Long id, FilterWrapper w) throws IOException {
+        return lineRest.getClientsAvailableFiltered(id, w);
+    }
+
     @GET
     @Path("/client/{id}")
     public TicketWrapper getClient(@PathParam("id") Long id) {
@@ -136,5 +142,4 @@ public class KioskRest {
     public GenericWrapper getConfigOrgnameRu() {
         return configRest.getOrganizationNameRu();
     }
-
 }

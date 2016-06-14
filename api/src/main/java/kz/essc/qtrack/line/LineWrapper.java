@@ -19,6 +19,21 @@ public class LineWrapper {
 	private long lineHierarchyId;
 	private Date begin;
 	private Date end;
+	private Date suBegin;
+	private Date suEnd;
+	private Date moBegin;
+	private Date moEnd;
+	private Date tuBegin;
+	private Date tuEnd;
+	private Date weBegin;
+	private Date weEnd;
+	private Date thBegin;
+	private Date thEnd;
+	private Date frBegin;
+	private Date frEnd;
+	private Date stBegin;
+	private Date stEnd;
+	private Boolean isRaw;
 
 	public long getId() {
 		return id;
@@ -111,6 +126,111 @@ public class LineWrapper {
 		this.begin = begin;
 	}
 
+	public Date getSuBegin() {
+		return suBegin;
+	}
+	public void setSuBegin(Date suBegin) {
+		this.suBegin = suBegin;
+	}
+
+	public Date getSuEnd() {
+		return suEnd;
+	}
+	public void setSuEnd(Date suEnd) {
+		this.suEnd = suEnd;
+	}
+
+	public Date getMoBegin() {
+		return moBegin;
+	}
+	public void setMoBegin(Date moBegin) {
+		this.moBegin = moBegin;
+	}
+
+	public Date getMoEnd() {
+		return moEnd;
+	}
+	public void setMoEnd(Date moEnd) {
+		this.moEnd = moEnd;
+	}
+
+	public Date getTuBegin() {
+		return tuBegin;
+	}
+	public void setTuBegin(Date tuBegin) {
+		this.tuBegin = tuBegin;
+	}
+
+	public Date getTuEnd() {
+		return tuEnd;
+	}
+	public void setTuEnd(Date tuEnd) {
+		this.tuEnd = tuEnd;
+	}
+
+	public Date getWeBegin() {
+		return weBegin;
+	}
+	public void setWeBegin(Date weBegin) {
+		this.weBegin = weBegin;
+	}
+
+	public Date getWeEnd() {
+		return weEnd;
+	}
+	public void setWeEnd(Date weEnd) {
+		this.weEnd = weEnd;
+	}
+
+	public Date getThBegin() {
+		return thBegin;
+	}
+	public void setThBegin(Date thBegin) {
+		this.thBegin = thBegin;
+	}
+
+	public Date getThEnd() {
+		return thEnd;
+	}
+	public void setThEnd(Date thEnd) {
+		this.thEnd = thEnd;
+	}
+
+	public Date getFrBegin() {
+		return frBegin;
+	}
+	public void setFrBegin(Date frBegin) {
+		this.frBegin = frBegin;
+	}
+
+	public Date getFrEnd() {
+		return frEnd;
+	}
+	public void setFrEnd(Date frEnd) {
+		this.frEnd = frEnd;
+	}
+
+	public Date getStBegin() {
+		return stBegin;
+	}
+	public void setStBegin(Date stBegin) {
+		this.stBegin = stBegin;
+	}
+
+	public Date getStEnd() {
+		return stEnd;
+	}
+	public void setStEnd(Date stEnd) {
+		this.stEnd = stEnd;
+	}
+
+	public Boolean getIsRaw() {
+		return isRaw;
+	}
+	public void setIsRaw(Boolean isRaw) {
+		this.isRaw = isRaw;
+	}
+
 	public static LineWrapper wrap(Line line){
 		LineWrapper wrapper = new LineWrapper();
 
@@ -130,6 +250,21 @@ public class LineWrapper {
 			wrapper.setEnabled(line.getEnabled());
 			wrapper.setBegin(line.getBegin());
 			wrapper.setEnd(line.getEnd());
+			wrapper.setSuBegin(line.getSuBegin());
+			wrapper.setSuEnd(line.getSuEnd());
+			wrapper.setMoBegin(line.getMoBegin());
+			wrapper.setMoEnd(line.getMoEnd());
+			wrapper.setTuBegin(line.getTuBegin());
+			wrapper.setTuEnd(line.getTuEnd());
+			wrapper.setWeBegin(line.getWeBegin());
+			wrapper.setWeEnd(line.getWeEnd());
+			wrapper.setThBegin(line.getThBegin());
+			wrapper.setThEnd(line.getThEnd());
+			wrapper.setFrBegin(line.getFrBegin());
+			wrapper.setFrEnd(line.getFrEnd());
+			wrapper.setStBegin(line.getStBegin());
+			wrapper.setStEnd(line.getStEnd());
+			wrapper.setIsRaw(line.getIsRaw());
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -157,7 +292,10 @@ public class LineWrapper {
 				", enabled:" + enabled +
 				", nameKz:'" + nameKz + '\'' +
 				", nameEn:'" + nameEn + '\'' +
-				", nameRu:'" + nameRu + '\'';
+				", nameRu:'" + nameRu + '\'' +
+				", isRaw:"+isRaw;
+
+		// TODO add isRaw
 
 
 		if (begin == null)

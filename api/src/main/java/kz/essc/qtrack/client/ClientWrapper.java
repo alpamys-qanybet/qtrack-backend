@@ -108,15 +108,22 @@ public class ClientWrapper {
 
 	@Override
 	public String toString() {
-		return "{" +
-				"id:" + id +
-				", date:" + date.getTime() +
-				", code:'" + code + '\'' +
+		String result = "{" +
+				"id:" + id;
+
+		if (date== null)
+			result += ", date: null";
+		else
+			result += ", date:" + date.getTime();
+
+		result += ", code:'" + code + '\'' +
 				", status:'" + status + '\'' +
 				", order:" + order +
 				", lineId:" + lineId +
 				", operatorId:" + operatorId +
 				", lang:'" + lang + '\'' +
 				'}';
+
+		return result;
 	}
 }

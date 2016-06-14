@@ -2,9 +2,7 @@ package kz.essc.qtrack.client;
 
 import kz.essc.qtrack.jms.CallingMessageProducer;
 import kz.essc.qtrack.kiosk.KioskBean;
-import kz.essc.qtrack.line.Line;
-import kz.essc.qtrack.line.LineBean;
-import kz.essc.qtrack.line.LineWrapper;
+import kz.essc.qtrack.line.*;
 import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.sc.user.User;
 import kz.essc.qtrack.user.UserBean;
@@ -20,10 +18,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequestScoped
 public class ClientBean {
@@ -73,32 +68,65 @@ public class ClientBean {
     public Client add(Long lineId, ClientWrapper wrapper) {
         try {
             Line line = (Line) em.find(Line.class, lineId);
-
-            if (line.getCounter() == 999)
-                line.setCounter(0);
-
-            int counter = line.getCounter()+1;
-            String code = generateCode(line.getPrefix(), counter);
-
-            int length = line.getLength()+1;
-
-            Date now = new Date();
             Client client = new Client();
-            client.setDate(now);
-            client.setStatus(Client.Status.WAITING.toString());
-            client.setLine(line);
-            client.setCode(code);
-            client.setOrder(length);
-            client.setEvent(now);
-            client.setLang(wrapper.getLang());
+            Date now = new Date();
 
-            em.persist(client);
+            if (line.getIsRaw()) {
+                if (line.getCounter() == 999)
+                    line.setCounter(0);
 
-            line.getClients().add(client);
-            line.setCounter(counter);
-            line.setLength(length);
+                int counter = line.getCounter() + 1;
+                String code = generateCode(line.getPrefix(), counter);
 
-            em.merge(line);
+                int length = line.getLength() + 1;
+
+                client.setDate(now);
+                client.setStatus(Client.Status.WAITING.toString());
+                client.setLine(line);
+                client.setCode(code);
+                client.setOrder(length);
+                client.setEvent(now);
+                client.setLang(wrapper.getLang());
+
+                em.persist(client);
+
+                line.getClients().add(client);
+                line.setCounter(counter);
+                line.setLength(length);
+
+                em.merge(line);
+            }
+            else {
+                Date date = wrapper.getDate(); // specified date that come from UI
+                LineAppointment la = lineBean.getLA(line.getId(), date);
+
+                if (la.getCounter() == 999)
+                    la.setCounter(0);
+
+                int counter = la.getCounter() + 1;
+                String code = generateCode(line.getPrefix(), counter);
+
+                int length = la.getLength() + 1;
+
+                client.setDate(date);
+                client.setStatus(Client.Status.WAITING.toString());
+                client.setLine(line);
+                client.setCode(code);
+                client.setOrder(length);
+                client.setEvent(now);
+                client.setLang(wrapper.getLang());
+
+                em.persist(client);
+
+                line.getClients().add(client);
+                em.merge(line);
+
+                la.setCounter(counter);
+                la.setLength(length);
+                em.merge(la);
+
+                lineBean.orderAppointmentClients(line.getId(), date);
+            }
 
             return client;
         }
@@ -323,34 +351,48 @@ public class ClientBean {
         }
     }
 
+    // sending works to raw lines
     public Client send(Long id, ClientWrapper wrapper, String login) {
         try {
             Client client = (Client) em.find(Client.class, id);
             Line line = (Line) em.find(Line.class, wrapper.getLineId());
             Line prev = client.getLine();
 
+            int sentClientOrder = 0;
             prev.getClients().remove(client);
-            if (prev.getClients().isEmpty())
-                prev.setLength(0);
+
+            if (prev.getIsRaw())
+                if (prev.getClients().isEmpty())
+                    prev.setLength(0);
+                else
+                    prev.setLength(prev.getLength()-1);
+            else {
+                LineAppointment la = lineBean.getLA(prev.getId(), client.getDate());
+
+                if (lineBean.getAvailableClients(prev.getId(), client.getDate()).isEmpty())
+                    la.setLength(0);
+                else
+                    la.setLength(la.getLength()-1);
+                em.merge(la);
+            }
             em.merge(prev);
 
             // TODO check if need to remove following two line code ?
             if (line.getCounter() == 999)
                 line.setCounter(0);
 
-            int length = line.getLength()+1;
+            int length = line.getLength() + 1;
             line.getClients().add(client);
             line.setLength(length);
 
             line = em.merge(line);
 
             User operator = (User) em.find(User.class, client.getOperator().getId());
-
             List<Client> waitingClients = lineBean.getAvailableClients(line.getId());
 
-            int sentClientOrder = length;
+            sentClientOrder = length;
             boolean afterCameFound = false;
-            for (Client waiting: waitingClients) {
+            for (Client waiting : waitingClients) {
                 if (!afterCameFound) {
                     if (waiting.getDate().after(client.getDate())) {
                         afterCameFound = true;
@@ -359,8 +401,7 @@ public class ClientBean {
 
                         em.merge(waiting);
                     }
-                }
-                else {
+                } else {
                     if (waiting.getDate().after(client.getDate())) {
                         waiting.setOrder(waiting.getOrder() + 1);
 
@@ -422,12 +463,25 @@ public class ClientBean {
 
             Line line = client.getLine();
             line.getClients().remove(client);
+            line = em.merge(line);
 
-            if (line.getClients().isEmpty())
-                line.setLength(0);
+            if (line.getIsRaw())
+                if (line.getClients().isEmpty())
+                    line.setLength(0);
+                else
+                    line.setLength(line.getLength()-1);
+            else {
+                List<Client> list = lineBean.getAvailableClients(line.getId(), client.getDate());
+                LineAppointment la = lineBean.getLA(line.getId(), client.getDate());
+
+                if (list.isEmpty())
+                    la.setLength(0);
+                else
+                    la.setLength(la.getLength()-1);
+                em.merge(la);
+            }
 
             em.merge(line);
-
             em.remove(client);
 
             JSONObject jsonInfo = new JSONObject();
@@ -468,10 +522,20 @@ public class ClientBean {
 //            statuses.add("CALLED");
 //            statuses.add("IN_PROCESS");
 
+            Date todayBegin = new Date();
+            todayBegin.setHours(0);
+            todayBegin.setMinutes(0);
+            Date todayEnd = new Date();
+            todayEnd.setHours(23);
+            todayEnd.setMinutes(59);
+
             list = em.createQuery("select c from Client c " +
                     "where c.status in :statuses " +
+                    "and c.date >= :begin and c.date <= :end " +
                     "order by c.event desc ")
                     .setParameter("statuses", Arrays.asList("CALLED", "IN_PROCESS"))
+                    .setParameter("begin", todayBegin)
+                    .setParameter("end", todayEnd)
                     .setMaxResults(6)
                     .getResultList();
         }

@@ -16,9 +16,28 @@ public class StatBean {
     @PersistenceContext
     EntityManager em;
 
-    public List<Process> get() {
-        List<Process> list = (List) em.createQuery("select p from Process p ")
-                                .getResultList();
+    public List<Process> get(FilterWrapper fw) {
+        StringBuilder hql = new StringBuilder();
+        hql.append("select p from Process p ");
+        hql.append("where p.begin >= :begin and p.begin <= :end ");
+        if (fw.getLine() != null)
+            hql.append("and p.lineId = :line ");
+        if (fw.getOperator() != null)
+            hql.append("and p.operatorId = :operator ");
+
+        Query query = em.createQuery(hql.toString())
+                .setParameter("begin", fw.getBegin())
+                .setParameter("end", fw.getEnd());
+
+        if (fw.getLine() != null)
+            query.setParameter("line", fw.getLine().longValue());
+
+        if (fw.getOperator() != null)
+            query.setParameter("operator", fw.getOperator().longValue());
+
+        List<Process> list = query.getResultList();
+//                (List) em.createQuery("select p from Process p ")
+//                                .getResultList();
 
         return list;
     }
