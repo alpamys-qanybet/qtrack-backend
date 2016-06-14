@@ -13,6 +13,7 @@ public class UserWrapper {
 	private long id;
 	private String login;
 	private String name;
+	private String shortname;
 	private String password;
 	private String old;
 
@@ -36,7 +37,14 @@ public class UserWrapper {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public String getShortname() {
+		return shortname;
+	}
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -65,6 +73,7 @@ public class UserWrapper {
 			wrapper.setLogin(user.getLogin());
 			wrapper.setName(user.getName());
 //			wrapper.setPassword(user.getPassword());
+			wrapper.setShortname(user.getShortname());
 		}
 		catch (Exception e) {
 //			e.printStackTrace();

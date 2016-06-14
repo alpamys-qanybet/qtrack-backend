@@ -89,6 +89,19 @@ public class KioskRest {
     }
 
     @GET
+    @Path("/genlp")
+    @Transactional
+    public GenericWrapper getLP() {
+        return GenericWrapper.wrap(kioskBean.genLP());
+    }
+
+    /*@GET
+    @Path("/line/prefix")
+    public GenericWrapper getLP() {
+        return GenericWrapper.wrap(kioskBean.genLP());
+    }*/
+
+    @GET
     @Path("/client/{id}")
     public TicketWrapper getClient(@PathParam("id") Long id) {
         TicketWrapper wrap = TicketWrapper.wrap(clientBean.get(id));

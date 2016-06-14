@@ -3,12 +3,6 @@ package kz.essc.qtrack.line;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/*
-var n = 6424;
-for (var i=0; i<366; i++) { console.log((n+i) + ' ' + (i+1)); }
-INSERT INTO li_line_appointment(id_, counter_, length_, day_, year_) VALUES (6424, 0, 0, 1, 2016);
-*/
-
 @Entity
 @Table(name="li_appointment")
 public class LineAppointment implements Serializable {

@@ -243,7 +243,7 @@ public class LineWrapper {
 
 		try {
 			wrapper.setName(line.getName());
-			wrapper.setPrefix(line.getPrefix());
+			wrapper.setPrefix(line.getPrefix().toUpperCase());
 //			wrapper.setLimit(line.getLimit());
 			wrapper.setCounter(line.getCounter());
 			wrapper.setLength(line.getLength());

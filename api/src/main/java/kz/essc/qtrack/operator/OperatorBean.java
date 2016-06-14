@@ -16,7 +16,8 @@ public class OperatorBean {
 
         try {
             return em.createQuery("select u from User u join u.roles r " +
-                    "where r.name = :role")
+                    "where r.name = :role " +
+                    "order by u.cabinet")
                     .setParameter("role", Role.Name.OPERATOR.toString())
                     .getResultList();
         }

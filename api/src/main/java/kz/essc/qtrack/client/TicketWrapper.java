@@ -131,7 +131,7 @@ public class TicketWrapper {
 
 			wrapper.setId(client.getId());
 			wrapper.setDate(client.getDate());
-			wrapper.setCode(client.getCode());
+			wrapper.setCode(client.getCode().toUpperCase());
 			wrapper.setStatus(client.getStatus());
 			wrapper.setOrder(client.getOrder());
 			wrapper.setLineId(line.getId());

@@ -18,6 +18,7 @@ public class User implements Serializable {
 	private long id;
 	private String login;
 	private String name;
+	private String shortname;
 	private String password;
 	private Set<Role> roles = new HashSet<>();
 
@@ -58,6 +59,14 @@ public class User implements Serializable {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name="shortname_")
+	public String getShortname() {
+		return shortname;
+	}
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
 	}
 
 	@Column(name="password_", nullable=false)

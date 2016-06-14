@@ -142,4 +142,10 @@ public class LineRest {
         List<LineWrapper> list = LineWrapper.wrap(lineBean.getAvailable());
         return lineBean.translated(list);
     }
+
+    @GET
+    @Path("/available/prefix")
+    public List<LinePrefixWrapper> getAvailablePrefix() {
+        return LinePrefixWrapper.wrap(lineBean.getAvailableLinePrefixes());
+    }
 }
