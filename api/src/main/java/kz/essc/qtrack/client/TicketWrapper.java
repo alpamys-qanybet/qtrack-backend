@@ -140,7 +140,7 @@ public class TicketWrapper {
 			List<String> operators = new ArrayList<>();
 			List<String> cabinets = new ArrayList<>();
 			for (User operator: line.getOperators()) {
-				operators.add(operator.getName());
+				operators.add(operator.getShortname());
 				if (operator.getCabinet() != null)
 					cabinets.add(operator.getCabinet());
 			}
