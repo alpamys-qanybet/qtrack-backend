@@ -28,9 +28,9 @@ public class CallingMessegeConsumer implements MessageListener {
 
 //                System.out.println("code " + code + " cabinet " + cabinet);
 
-//                TODO prefix is a number 99
-                boolean withPrefix = true, withPostfix = true;
-                switch (code.charAt(0)) {
+//                boolean withPrefix = true;
+                boolean withPostfix = true;
+                /*switch (code.charAt(0)) {
                     case '0':
                     case '1':
                     case '2':
@@ -43,7 +43,7 @@ public class CallingMessegeConsumer implements MessageListener {
                     case '9':
                         withPrefix = false;
                         break;
-                }
+                }*/
 
                 switch (cabinet.charAt(cabinet.length()-1)) {
                     case '0':
@@ -62,10 +62,10 @@ public class CallingMessegeConsumer implements MessageListener {
 
                 int [] digitsCode, digitsCabinet;
 
-                if (withPrefix)
-                    digitsCode = digitize(code.substring(1));
-                else
-                    digitsCode = digitize(code);
+//                if (withPrefix)
+//                    digitsCode = digitize(code.substring(1));
+//                else
+                digitsCode = digitize(code);
 
                 if (withPostfix)
                     digitsCabinet = digitize(cabinet.substring(0, cabinet.length()-2));
@@ -147,7 +147,7 @@ public class CallingMessegeConsumer implements MessageListener {
                     list.add(path+second+format);
             }
         }
-        else if (l == 3) {
+        /*else if (l == 3) {
             int first = digits[0]*100;
             int second = digits[1]*10;
             int third = digits[2];
@@ -176,6 +176,61 @@ public class CallingMessegeConsumer implements MessageListener {
 
                     if (third != 0)
                         list.add(path+third+format);
+                }
+            }
+        }*/
+        else if (l == 4) {
+            int first = digits[0]*1000;
+            int second = digits[1]*100;
+            int third = digits[2]*10;
+            int forth = digits[3];
+            int n = first + second + third + forth;
+
+            if (n < 20) {
+                list.add(path+n+format);
+            }
+            else if (n < 100){
+                list.add(path+third+format);
+                if (forth != 0)
+                    list.add(path+forth+format);
+            }
+            else if (n < 1000) {
+                list.add(path+digits[1]+format);
+                list.add(path+100+format);
+
+                int d = n%100;
+
+                if (d == 0) {}
+                else if (d < 20) {
+                    list.add(path+d+format);
+                }
+                else {
+                    list.add(path+third+format);
+
+                    if (forth != 0)
+                        list.add(path+forth+format);
+                }
+            }
+            else {
+                list.add(path+digits[0]+format);
+                list.add(path+1000+format);
+
+                if (digits[1] > 0) {
+                    list.add(path+digits[1]+format);
+                    list.add(path+100+format);
+                }
+
+                int d = n%100;
+
+                if (d == 0) {}
+                else if (d < 20) {
+                    list.add(path+d+format);
+                }
+                else {
+                    list.add(path+third+format);
+
+                    if (forth != 0)
+                        list.add(path+forth+format);
                 }
             }
         }
@@ -220,7 +275,7 @@ public class CallingMessegeConsumer implements MessageListener {
                     list.add(path+second+format);
             }
         }
-        else if (l == 3) {
+        /*else if (l == 3) {
             int first = digits[0]*100;
             int second = digits[1]*10;
             int third = digits[2];
@@ -249,6 +304,60 @@ public class CallingMessegeConsumer implements MessageListener {
 
                     if (third != 0)
                         list.add(path+third+format);
+                }
+            }
+        }*/
+        else if (l == 4) {
+            int first = digits[0]*1000;
+            int second = digits[1]*100;
+            int third = digits[2]*10;
+            int forth = digits[3];
+            int n = first + second + third + forth;
+
+            if (n < 10) {
+                list.add(path+n+format);
+            }
+            else if (n < 100){
+                list.add(path+third+format);
+                if (forth != 0)
+                    list.add(path+forth+format);
+            }
+            else if (n < 1000) {
+                if (digits[1] > 1)
+                    list.add(path+digits[1]+format);
+                list.add(path+100+format);
+
+                int d = n%100;
+                if (d < 10 && d != 0) {
+                    list.add(path+d+format);
+                }
+                else {
+                    if (third != 0)
+                        list.add(path+third+format);
+
+                    if (forth != 0)
+                        list.add(path+forth+format);
+                }
+            }
+            else {
+                if (digits[0] > 1)
+                    list.add(path+digits[0]+format);
+                list.add(path+1000+format);
+
+                if (digits[1] > 1)
+                    list.add(path+digits[1]+format);
+                list.add(path+100+format);
+
+                int d = n%100;
+                if (d < 10 && d != 0) {
+                    list.add(path+d+format);
+                }
+                else {
+                    if (third != 0)
+                        list.add(path+third+format);
+
+                    if (forth != 0)
+                        list.add(path+forth+format);
                 }
             }
         }
@@ -294,7 +403,7 @@ public class CallingMessegeConsumer implements MessageListener {
                     list.add(path+second+format);
             }
         }
-        else if (l == 3) {
+        /*else if (l == 3) {
             int first = digits[0]*100;
             int second = digits[1]*10;
             int third = digits[2];
@@ -322,6 +431,58 @@ public class CallingMessegeConsumer implements MessageListener {
 
                     if (third != 0)
                         list.add(path+third+format);
+                }
+            }
+        }*/
+        else if (l == 4) {
+            int first = digits[0]*1000;
+            int second = digits[1]*100;
+            int third = digits[2]*10;
+            int forth = digits[3];
+            int n = first + second + third + forth;
+
+            if (n < 20) {
+                list.add(path+n+format);
+            }
+            else if (n < 100) {
+                list.add(path+third+format);
+                if (forth != 0)
+                    list.add(path+forth+format);
+            }
+            else if (n < 1000) {
+                list.add(path+second+format);
+
+                int d = n%100;
+
+                if (d == 0) {}
+                else if (d < 20) {
+                    list.add(path+d+format);
+                }
+                else {
+                    list.add(path+third+format);
+
+                    if (forth != 0)
+                        list.add(path+forth+format);
+                }
+            }
+            else {
+                if (digits[0] > 1)
+                    list.add(path+digits[0]+format);
+                list.add(path+1000+format);
+
+                list.add(path+second+format);
+
+                int d = n%100;
+
+                if (d == 0) {}
+                else if (d < 20) {
+                    list.add(path+d+format);
+                }
+                else {
+                    list.add(path+third+format);
+
+                    if (forth != 0)
+                        list.add(path+forth+format);
                 }
             }
         }
@@ -388,10 +549,16 @@ public class CallingMessegeConsumer implements MessageListener {
             digits[0] = number/10;
             digits[1] = number%10;
         }
-        else if (n == 3) {
+        /*else if (n == 3) {
             digits[0] = number/100;
             digits[1] = (number%100)/10;
             digits[2] = number%10;
+        }*/
+        else if (n == 4) {
+            digits[0] = number/1000;
+            digits[1] = (number%1000)/100;
+            digits[2] = (number%100)/10;
+            digits[3] = number%10;
         }
 
         return digits;

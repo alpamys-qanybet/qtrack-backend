@@ -72,8 +72,8 @@ public class ClientBean {
             Date now = new Date();
 
             if (line.getIsRaw()) {
-                if (line.getCounter() == 999)
-                    line.setCounter(0);
+                if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0) // 999
+                    line.setCounter(line.getCounterBegin()); // 0
 
                 int counter = line.getCounter() + 1;
                 String code = generateCode(line.getPrefix(), counter);
@@ -100,8 +100,8 @@ public class ClientBean {
                 Date date = wrapper.getDate(); // specified date that come from UI
                 LineAppointment la = lineBean.getLA(line.getId(), date);
 
-                if (la.getCounter() == 999)
-                    la.setCounter(0);
+                if (la.getCounter() == line.getCounterEnd() || la.getCounter() == 0) // 999
+                    la.setCounter(line.getCounterBegin()); // 0
 
                 int counter = la.getCounter() + 1;
                 String code = generateCode(line.getPrefix(), counter);
@@ -378,8 +378,8 @@ public class ClientBean {
             em.merge(prev);
 
             // TODO check if need to remove following two line code ?
-            if (line.getCounter() == 999)
-                line.setCounter(0);
+            if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0) // 999
+                line.setCounter(line.getCounterBegin()); // 0
 
             int length = line.getLength() + 1;
             line.getClients().add(client);
@@ -507,11 +507,19 @@ public class ClientBean {
     }
 
     private String generateCode(String prefix, int number) {
+    /*
         int third = number%10;
         int second = (number%100)/10;
         int first = number/100;
 
         return prefix + first + second + third;
+    */
+        int forth = number%10;
+        int third = (number%100)/10;
+        int second = (number%1000)/100;
+        int first = number/1000;
+
+        return "" +first + second + third + forth;
     }
 
     public List<Client> getCalledAndInprocessClients(){

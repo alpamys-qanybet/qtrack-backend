@@ -11,6 +11,7 @@ public class OperatorWrapper {
 	private long id;
 	private String login;
 	private String name;
+	private String shortname;
 	private String position;
 	private String cabinet;
 	private String status;
@@ -89,6 +90,13 @@ public class OperatorWrapper {
 		this.lineId = lineId;
 	}
 
+	public String getShortname() {
+		return shortname;
+	}
+	public void setShortname(String shortname) {
+		this.shortname = shortname;
+	}
+
 	//	@Override
 	public static OperatorWrapper wrapInherited(User user){
 		OperatorWrapper wrapper = new OperatorWrapper();
@@ -102,6 +110,7 @@ public class OperatorWrapper {
 			wrapper.setStatus(user.getStatus());
 			wrapper.setLineId(user.getLine().getId());
 			wrapper.setDisplay(user.getDisplay());
+			wrapper.setShortname(user.getShortname());
 		}
 		catch(NullPointerException npe) {
 //			npe.printStackTrace();
@@ -131,6 +140,7 @@ public class OperatorWrapper {
 				"id:" + id +
 				", login:'" + login + '\'' +
 				", name:'" + name + '\'' +
+				", shortname:'" + shortname + '\'' +
 				", position:'" + position + '\'' +
 				", cabinet:'" + cabinet + '\'' +
 				", status:'" + status + '\'' +

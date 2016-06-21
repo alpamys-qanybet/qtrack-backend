@@ -12,7 +12,7 @@ public class LineAppointment implements Serializable {
     private long timingId;
     private long lineId;
     private int length = 0; // set zero when clients end
-    private int counter = 0; // 0-999
+    private int counter = 0; // 0-9999
 
     @Id
     @Column(name="id_")

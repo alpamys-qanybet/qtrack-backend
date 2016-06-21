@@ -10,6 +10,8 @@ public class LineWrapper {
 	private String name;
 	private int limit;
 	private int counter;
+	private int counterBegin;
+	private int counterEnd;
 	private int length;
 	private String prefix;
 	private Boolean enabled;
@@ -61,6 +63,20 @@ public class LineWrapper {
 	}
 	public void setCounter(int counter) {
 		this.counter = counter;
+	}
+
+	public int getCounterBegin() {
+		return counterBegin;
+	}
+	public void setCounterBegin(int counterBegin) {
+		this.counterBegin = counterBegin;
+	}
+
+	public int getCounterEnd() {
+		return counterEnd;
+	}
+	public void setCounterEnd(int counterEnd) {
+		this.counterEnd = counterEnd;
 	}
 
 	public int getLength() {
@@ -246,6 +262,8 @@ public class LineWrapper {
 			wrapper.setPrefix(line.getPrefix().toUpperCase());
 //			wrapper.setLimit(line.getLimit());
 			wrapper.setCounter(line.getCounter());
+			wrapper.setCounterBegin(line.getCounterBegin());
+			wrapper.setCounterEnd(line.getCounterEnd());
 			wrapper.setLength(line.getLength());
 			wrapper.setEnabled(line.getEnabled());
 			wrapper.setBegin(line.getBegin());
@@ -287,6 +305,8 @@ public class LineWrapper {
 				", name:'" + name + '\'' +
 				", limit:" + limit +
 				", counter:" + counter +
+				", counterBegin:" + counterBegin +
+				", counterEnd:" + counterEnd +
 				", length:" + length +
 				", prefix:'" + prefix + '\'' +
 				", enabled:" + enabled +
@@ -294,9 +314,6 @@ public class LineWrapper {
 				", nameEn:'" + nameEn + '\'' +
 				", nameRu:'" + nameRu + '\'' +
 				", isRaw:"+isRaw;
-
-		// TODO add isRaw
-
 
 		if (begin == null)
 			result += ", begin: null";

@@ -33,6 +33,7 @@ public class OperatorBean {
             operator.setCabinet(wrapper.getCabinet());
             operator.setPosition(wrapper.getPosition());
             operator.setEnabled(wrapper.getEnabled());
+            operator.setShortname(wrapper.getShortname());
 //            operator.setOnline(operatorWrapper.getOnline());
             operator.setDisplay(wrapper.getDisplay());
             return em.merge(operator);

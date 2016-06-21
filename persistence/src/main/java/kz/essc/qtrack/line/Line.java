@@ -19,7 +19,9 @@ public class Line implements Serializable {
     private List<User> operators;
     private List<Client> clients;
     private int length = 0; // set zero when clients end
-    private int counter = 0; // 0-999
+    private int counter = 0; // 1-9999
+    private int counterBegin = 1;
+    private int counterEnd = 9999;
     private Boolean enabled;
     private LineHierarchy lineHierarchy;
     private Date begin;
@@ -96,6 +98,22 @@ public class Line implements Serializable {
     }
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    @Column(name="counter_begin_")
+    public int getCounterBegin() {
+        return counterBegin;
+    }
+    public void setCounterBegin(int counterBegin) {
+        this.counterBegin = counterBegin;
+    }
+
+    @Column(name="counter_end_")
+    public int getCounterEnd() {
+        return counterEnd;
+    }
+    public void setCounterEnd(int counterEnd) {
+        this.counterEnd = counterEnd;
     }
 
     @Column(name="enabled_")

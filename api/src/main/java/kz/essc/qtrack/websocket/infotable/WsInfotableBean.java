@@ -1,5 +1,6 @@
 package kz.essc.qtrack.websocket.infotable;
 
+import kz.essc.qtrack.core.resource.ResourceBean;
 import kz.essc.qtrack.websocket.operator.OperatorEventSocketClient;
 
 import javax.enterprise.context.RequestScoped;
@@ -10,7 +11,7 @@ import java.net.URISyntaxException;
 public class WsInfotableBean {
 
     private OperatorEventSocketClient client;
-    private final String wsAddress = "ws://alpamys-samsung:8080/api/infotable";
+    private final String wsAddress = "ws://"+ ResourceBean.getHost()+"/api/infotable";
 //    private final String wsAddress = "ws://192.168.1.108:8080/api/infotable";
 
     private void initWS(String clientId) throws URISyntaxException {

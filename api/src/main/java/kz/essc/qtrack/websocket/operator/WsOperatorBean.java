@@ -1,5 +1,7 @@
 package kz.essc.qtrack.websocket.operator;
 
+import kz.essc.qtrack.core.resource.ResourceBean;
+
 import javax.enterprise.context.RequestScoped;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,7 +11,7 @@ public class WsOperatorBean {
 
     private OperatorEventSocketClient client;
 //    private final String wsOperDispAddress = "ws://192.168.100.14:8080/api/operdisp";
-    private final String wsAddress = "ws://alpamys-samsung:8080/api/operator";
+    private final String wsAddress = "ws://"+ ResourceBean.getHost()+"/api/operator";
 
     private void initWS(String clientId) throws URISyntaxException {
         client = new OperatorEventSocketClient(new URI(wsAddress + "/"+clientId));

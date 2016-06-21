@@ -6,6 +6,8 @@ import kz.essc.qtrack.client.ClientWrapper;
 import kz.essc.qtrack.client.TicketWrapper;
 import kz.essc.qtrack.config.ConfigRest;
 import kz.essc.qtrack.core.GenericWrapper;
+//import kz.essc.qtrack.core.resource.ResourceBean;
+import kz.essc.qtrack.core.resource.ResourceBean;
 import kz.essc.qtrack.line.*;
 import kz.essc.qtrack.line.hierarchy.LineHierarchyRest;
 import kz.essc.qtrack.line.hierarchy.LineHierarchyWrapper;
@@ -49,6 +51,9 @@ public class KioskRest {
 
     @Inject
     ConfigRest configRest;
+
+//    @Inject
+//    ResourceBean resourceBean;
 
     @GET
     @Path("/line")
@@ -154,5 +159,11 @@ public class KioskRest {
     @Path("/config/org/nameru")
     public GenericWrapper getConfigOrgnameRu() {
         return configRest.getOrganizationNameRu();
+    }
+
+    @GET
+    @Path("/display/listfiles/{name}")
+    public List<GenericWrapper> getKioskListFiles(@PathParam("name") String name) {
+        return GenericWrapper.wrap(ResourceBean.listFiles(name));
     }
 }

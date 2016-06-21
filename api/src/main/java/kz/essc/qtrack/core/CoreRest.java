@@ -23,6 +23,13 @@ public class CoreRest {
     }
 
     @GET
+    @Path("/displayjsonp")
+    @Produces("text/plain")
+    public String displayJsonp() {
+        return "jsonpresp('{\"Manufacturer\":\"BMW\"}')";
+    }
+
+    @GET
     @Path("/authorized")
     @Produces("text/plain")
     public boolean authorized() {

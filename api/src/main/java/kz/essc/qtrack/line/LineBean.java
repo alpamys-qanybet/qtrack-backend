@@ -46,7 +46,8 @@ public class LineBean {
     public List<Line> get() {
 
         try {
-            return em.createQuery("select l from Line l order by l.prefix").getResultList();
+            // order by l.prefix
+            return em.createQuery("select l from Line l order by l.counterBegin").getResultList();
         }
         catch (Exception e) {
 //            e.printStackTrace();
@@ -139,6 +140,9 @@ public class LineBean {
         LinePrefix lp = getPrefix(prefix);
         lp.setLineId(id);
         em.merge(lp);
+
+        line.setCounterBegin(wrapper.getCounterBegin());
+        line.setCounterEnd(wrapper.getCounterEnd());
 
         line.setIsRaw(wrapper.getIsRaw());
 
