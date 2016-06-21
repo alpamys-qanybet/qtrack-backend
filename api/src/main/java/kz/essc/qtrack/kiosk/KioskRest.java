@@ -162,6 +162,24 @@ public class KioskRest {
     }
 
     @GET
+    @Path("/config/org/textkz")
+    public GenericWrapper getConfigOrgtextKz() {
+        return configRest.getOrganizationTextKz();
+    }
+
+    @GET
+    @Path("/config/org/texten")
+    public GenericWrapper getConfigOrgtextEn() {
+        return configRest.getOrganizationTextEn();
+    }
+
+    @GET
+    @Path("/config/org/textru")
+    public GenericWrapper getConfigOrgtextRu() {
+        return configRest.getOrganizationTextRu();
+    }
+
+    @GET
     @Path("/display/listfiles/{name}")
     public List<GenericWrapper> getKioskListFiles(@PathParam("name") String name) {
         return GenericWrapper.wrap(ResourceBean.listFiles(name));

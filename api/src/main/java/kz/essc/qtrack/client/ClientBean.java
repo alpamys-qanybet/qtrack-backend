@@ -72,7 +72,32 @@ public class ClientBean {
             Date now = new Date();
 
             if (line.getIsRaw()) {
-                if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0) // 999
+                Date todayBegin = new Date();
+                todayBegin.setHours(0);
+                todayBegin.setMinutes(0);
+                Date todayEnd = new Date();
+                todayEnd.setHours(23);
+                todayEnd.setMinutes(59);
+
+                Long countTodayClients = (Long) em.createQuery("select count(c) from Client c " +
+                                                            "where c.date >= :begin and c.date <= :end " +
+                                                            "and c.line.id = :lineId")
+                    .setParameter("begin", todayBegin)
+                    .setParameter("end", todayEnd)
+                    .setParameter("lineId", line.getId())
+                    .getSingleResult();
+
+                Long countTodayProcesses = (Long) em.createQuery("select count(p) from Process p "+
+                                                                 "where p.begin >= :begin and p.begin <= :end "+
+                                                                 "and p.lineId = :lineId")
+                    .setParameter("begin", todayBegin)
+                    .setParameter("end", todayEnd)
+                    .setParameter("lineId", line.getId())
+                    .getSingleResult();
+
+                if ((countTodayClients + countTodayProcesses) == 0) // no clients today except deleted
+                    line.setCounter(line.getCounterBegin());
+                else if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0) // 999
                     line.setCounter(line.getCounterBegin()); // 0
 
                 int counter = line.getCounter() + 1;
