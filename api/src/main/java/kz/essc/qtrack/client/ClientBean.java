@@ -569,7 +569,7 @@ public class ClientBean {
                     .setParameter("statuses", Arrays.asList("CALLED", "IN_PROCESS"))
                     .setParameter("begin", todayBegin)
                     .setParameter("end", todayEnd)
-                    .setMaxResults(6)
+                    .setMaxResults(10)
                     .getResultList();
         }
         catch (NoResultException nre) {
