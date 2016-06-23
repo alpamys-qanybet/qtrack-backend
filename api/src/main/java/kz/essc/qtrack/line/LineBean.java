@@ -146,6 +146,12 @@ public class LineBean {
 
         line.setIsRaw(wrapper.getIsRaw());
 
+        if (line.getIsRaw()) {
+            line.setLimit(wrapper.getLimit());
+            if (wrapper.getAddToLimitAdditional() > 0)
+                line.setLimitAdditional(line.getLimitAdditional()+wrapper.getAddToLimitAdditional());
+        }
+
         if (wrapper.getBegin() != null) {
             line.setBegin(wrapper.getBegin());
         }

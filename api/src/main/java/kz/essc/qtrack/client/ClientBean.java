@@ -96,8 +96,11 @@ public class ClientBean {
                     .setParameter("lineId", line.getId())
                     .getSingleResult();
 
-                if ((countTodayClients + countTodayProcesses) == 0) // no clients today except deleted
+                if ((countTodayClients + countTodayProcesses) == 0) { // no clients today except deleted
                     line.setCounter(line.getCounterBegin());
+                    line.setLimitAdditional(0);
+                    line.setSize(0);
+                }
                 else if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0) // 999
                     line.setCounter(line.getCounterBegin()); // 0
 
@@ -105,6 +108,7 @@ public class ClientBean {
                 String code = generateCode(line.getPrefix(), counter);
 
                 int length = line.getLength() + 1;
+                line.setSize(line.getSize()+1);
 
                 client.setDate(now);
                 client.setStatus(Client.Status.WAITING.toString());
@@ -387,11 +391,14 @@ public class ClientBean {
             int sentClientOrder = 0;
             prev.getClients().remove(client);
 
-            if (prev.getIsRaw())
+            if (prev.getIsRaw()) {
+                prev.setSize(prev.getSize()+1);
+
                 if (prev.getClients().isEmpty())
                     prev.setLength(0);
                 else
-                    prev.setLength(prev.getLength()-1);
+                    prev.setLength(prev.getLength() - 1);
+            }
             else {
                 LineAppointment la = lineBean.getLA(prev.getId(), client.getDate());
 

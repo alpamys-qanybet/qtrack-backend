@@ -8,11 +8,14 @@ import java.util.List;
 public class LineWrapper {
 	private long id;
 	private String name;
-	private int limit;
 	private int counter;
 	private int counterBegin;
 	private int counterEnd;
 	private int length;
+	private int size;
+	private int limit;
+	private int limitAdditional;
+	private int addToLimitAdditional = 0;
 	private String prefix;
 	private Boolean enabled;
 	private String nameKz;
@@ -58,6 +61,20 @@ public class LineWrapper {
 		this.limit = limit;
 	}
 
+	public int getLimitAdditional() {
+		return limitAdditional;
+	}
+	public void setLimitAdditional(int limitAdditional) {
+		this.limitAdditional = limitAdditional;
+	}
+
+	public int getAddToLimitAdditional() {
+		return addToLimitAdditional;
+	}
+	public void setAddToLimitAdditional(int addToLimitAdditional) {
+		this.addToLimitAdditional = addToLimitAdditional;
+	}
+
 	public int getCounter() {
 		return counter;
 	}
@@ -84,6 +101,13 @@ public class LineWrapper {
 	}
 	public void setLength(int length) {
 		this.length = length;
+	}
+
+	public int getSize() {
+		return size;
+	}
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	public String getPrefix() {
@@ -260,11 +284,13 @@ public class LineWrapper {
 		try {
 			wrapper.setName(line.getName());
 			wrapper.setPrefix(line.getPrefix().toUpperCase());
-//			wrapper.setLimit(line.getLimit());
+			wrapper.setLimit(line.getLimit());
+			wrapper.setLimitAdditional(line.getLimitAdditional());
 			wrapper.setCounter(line.getCounter());
 			wrapper.setCounterBegin(line.getCounterBegin());
 			wrapper.setCounterEnd(line.getCounterEnd());
 			wrapper.setLength(line.getLength());
+			wrapper.setSize(line.getSize());
 			wrapper.setEnabled(line.getEnabled());
 			wrapper.setBegin(line.getBegin());
 			wrapper.setEnd(line.getEnd());
@@ -304,10 +330,13 @@ public class LineWrapper {
 				"id:" + id +
 				", name:'" + name + '\'' +
 				", limit:" + limit +
+				", limitAdditional:" + limitAdditional +
+				", addToLimitAdditional:" + addToLimitAdditional +
 				", counter:" + counter +
 				", counterBegin:" + counterBegin +
 				", counterEnd:" + counterEnd +
 				", length:" + length +
+				", size:" + size +
 				", prefix:'" + prefix + '\'' +
 				", enabled:" + enabled +
 				", nameKz:'" + nameKz + '\'' +

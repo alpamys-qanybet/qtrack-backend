@@ -19,9 +19,12 @@ public class Line implements Serializable {
     private List<User> operators;
     private List<Client> clients;
     private int length = 0; // set zero when clients end
+    private int size = 0; // increases till next day
     private int counter = 0; // 1-9999
     private int counterBegin = 1;
     private int counterEnd = 9999;
+    private int limit = 20;
+    private int limitAdditional = 0;
     private Boolean enabled;
     private LineHierarchy lineHierarchy;
     private Date begin;
@@ -92,6 +95,14 @@ public class Line implements Serializable {
         this.length = length;
     }
 
+    @Column(name="size_")
+    public int getSize() {
+        return size;
+    }
+    public void setSize(int size) {
+        this.size = size;
+    }
+
     @Column(name="counter_")
     public int getCounter() {
         return counter;
@@ -114,6 +125,22 @@ public class Line implements Serializable {
     }
     public void setCounterEnd(int counterEnd) {
         this.counterEnd = counterEnd;
+    }
+
+    @Column(name="limit_")
+    public int getLimit() {
+        return limit;
+    }
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    @Column(name="limit_add_")
+    public int getLimitAdditional() {
+        return limitAdditional;
+    }
+    public void setLimitAdditional(int limitAdditional) {
+        this.limitAdditional = limitAdditional;
     }
 
     @Column(name="enabled_")
