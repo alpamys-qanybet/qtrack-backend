@@ -18,6 +18,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 import java.util.*;
 
 @RequestScoped
@@ -477,7 +478,9 @@ public class ClientBean {
         }
     }
 
+    @Transactional
     public boolean delete(Long id) {
+//        System.out.println("delete " + id);
         try {
             Client client = (Client) em.find(Client.class, id);
 
@@ -526,7 +529,7 @@ public class ClientBean {
             return true;
         }
         catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }
@@ -584,5 +587,46 @@ public class ClientBean {
         int minutes = date.getMinutes();
 
         return minutes + hours*60;
+    }
+
+    @Transactional
+    public void checkOldDayClient(User operator) {
+//        System.out.println("checkOldDayClient " + operator.getLogin());
+//        if (operator.getClient() != null)
+//            System.out.println(" c " + operator.getClient().getCode());
+        Date today = new Date();
+        Client client = operator.getClient();
+
+        if (client == null)
+            return;
+
+//        System.out.println("before " + client.getDate().before(today));
+//        System.out.println("not today " + client.getDate().getDate() +" "+ today.getDate());
+//        System.out.println(client.getDate().before(today) && client.getDate().getDate() != today.getDate());
+        if (client.getDate().before(today) && client.getDate().getDate() != today.getDate()) {
+//            System.out.println("if before today");
+            if (operator.getClient().getStatus().equals(Client.Status.IN_PROCESS.toString())) {
+//                System.out.println("IN PROCESS");
+                try{
+                    Process process = (Process) em.createQuery("select p from Process p " +
+                            "where p.clientId = :clientId " +
+                            "and p.operatorId = :operatorId " +
+                            "and p.end is null")
+                            .setParameter("clientId", operator.getClient().getId())
+                            .setParameter("operatorId", operator.getId())
+                            .getSingleResult();
+
+                    Date processEnd = new Date(process.getBegin().getTime());
+                    processEnd.setMinutes(processEnd.getMinutes() + 20);
+                    process.setEnd(processEnd);
+
+                    em.merge(process);
+                }
+                catch(NoResultException e) {
+                    e.printStackTrace();
+                }
+            }
+            delete(client.getId());
+        }
     }
 }

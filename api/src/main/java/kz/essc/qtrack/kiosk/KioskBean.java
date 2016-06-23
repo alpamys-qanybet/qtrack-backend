@@ -81,6 +81,8 @@ public class KioskBean {
             for (User operator: line.getOperators()) {
                 JSONObject operatorJson = new JSONObject();
                 operatorJson.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+
+                clientBean.checkOldDayClient(operator);
                 if (operator.getClient() == null) {
                     operatorJson.put("current", "null");
                 }
@@ -129,6 +131,7 @@ public class KioskBean {
         for (User operator: operatorBean.get()) {
             JSONObject operatorJson = new JSONObject();
             operatorJson.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+            clientBean.checkOldDayClient(operator);
             if (operator.getClient() == null) {
                 operatorJson.put("current", "null");
             }
