@@ -13,6 +13,7 @@ import java.util.Scanner;
 @RequestScoped
 public class ConfigBean {
     private final String path = "/home/alpamys/dev/qtrack.config.json";
+//    private final String path = "D:/server/files/qtrack.config.json";
 //    private final String path = "D:/server/config/qtrack.config.json";
 
     public String get(String key) {

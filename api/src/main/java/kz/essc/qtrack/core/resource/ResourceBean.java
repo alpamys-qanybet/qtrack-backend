@@ -6,7 +6,10 @@ import java.util.List;
 
 public class ResourceBean {
     static final private String dir = "/home/alpamys/Videos";
-    static final private String host = "192.168.0.103:8080";
+//    static final private String dir = "D:/server/files/resource";
+
+    static final private String host = "192.168.0.102:8080";
+//    static final private String host = "192.168.1.142:8080";
 //    static final private String host = "alpamys-samsung:8080";
 
     public static String getDir() {

@@ -4,6 +4,7 @@ import javax.ejb.MessageDriven;
 import javax.jms.*;
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -13,8 +14,8 @@ public class CallingMessegeConsumer implements MessageListener {
     private static boolean isPlaying = false;
     static ArrayList<String> files = new ArrayList<>();
     private static int index = 0;
-     String relPath = "/home/alpamys/Downloads/numbers";
 //    String relPath = "D:/server/numbers";
+    String relPath = "/home/alpamys/Downloads/numbers";
     String path = relPath+"/en/rachel/wav/";
     String format = ".wav";
 
@@ -68,17 +69,16 @@ public class CallingMessegeConsumer implements MessageListener {
                 digitsCode = digitize(code);
 
                 if (withPostfix)
-                    digitsCabinet = digitize(cabinet.substring(0, cabinet.length()-2));
+                    digitsCabinet = digitize(cabinet.substring(0, cabinet.length() - 1));
                 else
                     digitsCabinet = digitize(cabinet);
-
                 ArrayList<String> list = null;
                 if (lang.equals("kz") || lang.equals("kk"))
-                    list = speachKz(digitsCode, digitsCabinet);
+                    list = speachKz(digitsCode, digitsCabinet, withPostfix);
                 else if (lang.equals("en"))
-                    list = speachEn(digitsCode, digitsCabinet);
+                    list = speachEn(digitsCode, digitsCabinet, withPostfix);
                 else if (lang.equals("ru"))
-                    list = speachRu(digitsCode, digitsCabinet);
+                    list = speachRu(digitsCode, digitsCabinet, withPostfix);
 
 
 //              123
@@ -108,7 +108,7 @@ public class CallingMessegeConsumer implements MessageListener {
         }
     }
 
-    private synchronized ArrayList<String> speachEn(int [] a, int [] b) {
+    private synchronized ArrayList<String> speachEn(int [] a, int [] b, boolean withLabel) {
         path = relPath+"/en/rachel/wav/";
         ArrayList<String> list = new ArrayList<>();
 
@@ -118,10 +118,13 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachEnDigit(a))
             list.add(s);
 
-        list.add(path+"cabinet"+format);
+        list.add(path+"gotoflooronecabinet"+format);
 
         for(String s: speachEnDigit(b))
             list.add(s);
+
+        if (withLabel)
+            list.add(path+"a"+format);
 
 //        for (String s: list)
 //            System.out.println("*** OUTPUT *** " + s);
@@ -237,8 +240,8 @@ public class CallingMessegeConsumer implements MessageListener {
         return list;
     }
 
-    private ArrayList<String> speachKz(int [] a, int [] b) {
-        path = relPath+"/kz/wav0/";
+    private ArrayList<String> speachKz(int [] a, int [] b, boolean withLabel) {
+        path = relPath+"/kz/fatima/louder/wav/";
         ArrayList<String> list = new ArrayList<>();
 
         list.add(relPath+"/notification.wav");
@@ -247,10 +250,14 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachKzDigit(a))
             list.add(s);
 
-        list.add(path+"n"+format);
+//        list.add(path+"n"+format);
+        list.add(path+"gotofloorone"+format);
 
         for(String s: speachKzDigit(b))
             list.add(s);
+
+        if (withLabel)
+            list.add(path+"a"+format);
 
         list.add(path+"cabinet"+format);
 
@@ -344,17 +351,19 @@ public class CallingMessegeConsumer implements MessageListener {
                     list.add(path+digits[0]+format);
                 list.add(path+1000+format);
 
-                if (digits[1] > 1)
-                    list.add(path+digits[1]+format);
-                list.add(path+100+format);
+                if (second != 0) {
+                    if (digits[1] > 1)
+                        list.add(path+digits[1]+format);
+                    list.add(path+100+format);
+                }
 
                 int d = n%100;
-                if (d < 10 && d != 0) {
+                if (d==0) {}
+                else if (d < 10) {
                     list.add(path+d+format);
                 }
                 else {
-                    if (third != 0)
-                        list.add(path+third+format);
+                    list.add(path+third+format);
 
                     if (forth != 0)
                         list.add(path+forth+format);
@@ -364,7 +373,7 @@ public class CallingMessegeConsumer implements MessageListener {
         return list;
     }
 
-    private synchronized ArrayList<String> speachRu(int [] a, int [] b) {
+    private synchronized ArrayList<String> speachRu(int [] a, int [] b, boolean withLabel) {
         path = relPath+"/ru/wav/";
         ArrayList<String> list = new ArrayList<>();
 
@@ -374,10 +383,13 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachRuDigit(a))
             list.add(s);
 
-        list.add(path+"cabinet"+format);
+        list.add(path+"gotoflooronecabinet"+format);
 
         for(String s: speachRuDigit(b))
             list.add(s);
+
+        if (withLabel)
+            list.add(path+"a"+format);
 
 //        for (String s: list)
 //            System.out.println("*** OUTPUT *** " + s);
@@ -466,11 +478,19 @@ public class CallingMessegeConsumer implements MessageListener {
                 }
             }
             else {
-                if (digits[0] > 1)
-                    list.add(path+digits[0]+format);
-                list.add(path+1000+format);
+                if (digits[0] == 1)
+                    list.add(path + "1000one" + format);
+                else if (digits[0] <= 4) {
+                    list.add(path + digits[0] + format);
+                    list.add(path + "1000twothreefour" + format);
+                }
+                else if (digits[0] > 4) {
+                    list.add(path + digits[0] + format);
+                    list.add(path + 1000 + format);
+                }
 
-                list.add(path+second+format);
+                if (second != 0)
+                    list.add(path+second+format);
 
                 int d = n%100;
 

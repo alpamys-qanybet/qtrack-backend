@@ -400,6 +400,8 @@ public class LineBean {
 //        Calendar calendar = Calendar.getInstance();
 //        int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR); // starts from 1
 
+        initAppointmentLineCounterOnDate(lineId, date);
+
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
         int day = calendar.get(Calendar.DAY_OF_YEAR);
@@ -430,52 +432,58 @@ public class LineBean {
             for (int i=0; i<=14; i++) {
                 Date date = new Date();
                 date.setDate(now.getDate() + i);
-                Calendar calendar = new GregorianCalendar();
-                calendar.setTime(date);
-                int day = calendar.get(Calendar.DAY_OF_YEAR);
-                int year = 1900 + date.getYear();
 
-                long timingId = 0;
-                List<LineAppointmentTiming> timingList = (List<LineAppointmentTiming>) em.createQuery(
-                        "select t from LineAppointmentTiming t " +
-                                "where t.year = :year " +
-                                "and t.day = :day ")
-                        .setParameter("year", year)
-                        .setParameter("day", day)
-                        .getResultList();
-
-                if (timingList.isEmpty()) {
-                    generateTiming(year);
-
-                    LineAppointmentTiming timing = (LineAppointmentTiming) em.createQuery(
-                            "select t from LineAppointmentTiming t " +
-                                    "where t.year = :year " +
-                                    "and t.day = :day ")
-                            .setParameter("year", year)
-                            .setParameter("day", day)
-                            .getSingleResult();
-
-                    timingId = timing.getId();
-                }
-                else
-                    timingId = timingList.get(0).getId();
-
-                List<LineAppointment> list = (List<LineAppointment>) em.createQuery(
-                        "select l from LineAppointment l " +
-                                "where l.timingId = :time " +
-                                "and l.lineId = :line")
-                        .setParameter("time", timingId)
-                        .setParameter("line", line.getId())
-                        .getResultList();
-
-                if (list.isEmpty()) {
-                    LineAppointment la = new LineAppointment();
-                    la.setTimingId(timingId);
-                    la.setLineId(line.getId());
-
-                    em.persist(la);
-                }
+                initAppointmentLineCounterOnDate(line.getId(), date);
             }
+        }
+    }
+
+    @Transactional
+    public void initAppointmentLineCounterOnDate(Long lineId, Date date) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        int day = calendar.get(Calendar.DAY_OF_YEAR);
+        int year = 1900 + date.getYear();
+
+        long timingId = 0;
+        List<LineAppointmentTiming> timingList = (List<LineAppointmentTiming>) em.createQuery(
+                "select t from LineAppointmentTiming t " +
+                        "where t.year = :year " +
+                        "and t.day = :day ")
+                .setParameter("year", year)
+                .setParameter("day", day)
+                .getResultList();
+
+        if (timingList.isEmpty()) {
+            generateTiming(year);
+
+            LineAppointmentTiming timing = (LineAppointmentTiming) em.createQuery(
+                    "select t from LineAppointmentTiming t " +
+                            "where t.year = :year " +
+                            "and t.day = :day ")
+                    .setParameter("year", year)
+                    .setParameter("day", day)
+                    .getSingleResult();
+
+            timingId = timing.getId();
+        }
+        else
+            timingId = timingList.get(0).getId();
+
+        List<LineAppointment> list = (List<LineAppointment>) em.createQuery(
+                "select l from LineAppointment l " +
+                        "where l.timingId = :time " +
+                        "and l.lineId = :line")
+                .setParameter("time", timingId)
+                .setParameter("line", lineId)
+                .getResultList();
+
+        if (list.isEmpty()) {
+            LineAppointment la = new LineAppointment();
+            la.setTimingId(timingId);
+            la.setLineId(lineId);
+
+            em.persist(la);
         }
     }
 
