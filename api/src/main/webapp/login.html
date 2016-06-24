@@ -17,15 +17,15 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4 center">
-            <h1 class="text-center login-title">Вход в систему</h1>
+            <h1 class="text-center login-title">Жүйе кірісі</h1>
             <div class="account-wall">
                 <img class="profile-img img-responsive" src="img/qtrack-bg.png" alt="">
                 <div class="form-signin" role="form">
                     <input type="text" name="j_username" class="form-control" placeholder="Логин" required autofocus>
-                    <input type="password" name="j_password" class="form-control" placeholder="Пароль" required>
-                    <button class="btn btn-lg btn-primary btn-block" onclick="loginClick();">Войти</button>
+                    <input type="password" name="j_password" class="form-control" placeholder="Құпиясөз" required>
+                    <button class="btn btn-lg btn-primary btn-block" onclick="loginClick();">Кіру</button>
                     <div id="errmsg">
-                        Неверный логин или пароль
+                        Логин немесе құпиясөз дұрыс емес
                     </div>
                 </div>
             </div>
@@ -43,8 +43,9 @@
     var url = document.referrer;
 
 //    var domainUrl = 'http://192.168.1.142:8080';
-    var domainUrl = 'http://192.168.0.102:8080';
-//    var domainUrl = 'http://alpamys-samsung:8080';
+//    var domainUrl = 'http://192.168.1.124:8080';
+//    var domainUrl = 'http://192.168.0.102:8080';
+    var domainUrl = 'http://alpamys-samsung:8080';
 
     $(document).keypress(function(e) {
         hasFocus = password.is(':focus');
