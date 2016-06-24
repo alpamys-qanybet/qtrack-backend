@@ -45,6 +45,7 @@ public class CallingMessageProducer {
             m.setStringProperty("lang", wrapper.getLang());
             m.setStringProperty("code", wrapper.getCode());
             m.setStringProperty("cabinet", operator.getCabinet());
+            m.setIntProperty("floor", operator.getFloor());
 
             publisher.send(m);
             System.out.println("QUEUE sent!");

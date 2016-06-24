@@ -32,6 +32,7 @@ public class OperatorBean {
             User operator = (User) em.find(User.class, id);
             operator.setCabinet(wrapper.getCabinet());
             operator.setPosition(wrapper.getPosition());
+            operator.setFloor(wrapper.getFloor());
             operator.setEnabled(wrapper.getEnabled());
             operator.setShortname(wrapper.getShortname());
 //            operator.setOnline(operatorWrapper.getOnline());

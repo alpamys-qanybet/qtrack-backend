@@ -34,6 +34,7 @@ public class User implements Serializable {
 	private String cabinet;
 	private int display = 0;
 	private Boolean enabled;
+	private int floor = 1;
 
 	@Id
 	@Column(name="id_")
@@ -144,6 +145,14 @@ public class User implements Serializable {
 	}
 	public void setDisplay(int display) {
 		this.display = display;
+	}
+
+	@Column(name="floor_")
+	public int getFloor() {
+		return floor;
+	}
+	public void setFloor(int floor) {
+		this.floor = floor;
 	}
 
 	@Column(name="enabled_")

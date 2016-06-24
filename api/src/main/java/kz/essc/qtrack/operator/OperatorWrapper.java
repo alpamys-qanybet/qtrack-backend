@@ -14,6 +14,7 @@ public class OperatorWrapper {
 	private String shortname;
 	private String position;
 	private String cabinet;
+	private int floor;
 	private String status;
 	private Boolean online;
 	private Boolean enabled;
@@ -53,6 +54,13 @@ public class OperatorWrapper {
 	}
 	public void setCabinet(String cabinet) {
 		this.cabinet = cabinet;
+	}
+
+	public int getFloor() {
+		return floor;
+	}
+	public void setFloor(int floor) {
+		this.floor = floor;
 	}
 
 	public String getStatus() {
@@ -105,12 +113,13 @@ public class OperatorWrapper {
 			wrapper.setId(user.getId());
 			wrapper.setPosition(user.getPosition());
 			wrapper.setCabinet(user.getCabinet());
+			wrapper.setFloor(user.getFloor());
 			wrapper.setEnabled(user.getEnabled());
 			wrapper.setOnline(user.getOnline());
 			wrapper.setStatus(user.getStatus());
-			wrapper.setLineId(user.getLine().getId());
 			wrapper.setDisplay(user.getDisplay());
 			wrapper.setShortname(user.getShortname());
+			wrapper.setLineId(user.getLine().getId());
 		}
 		catch(NullPointerException npe) {
 //			npe.printStackTrace();
@@ -143,6 +152,7 @@ public class OperatorWrapper {
 				", shortname:'" + shortname + '\'' +
 				", position:'" + position + '\'' +
 				", cabinet:'" + cabinet + '\'' +
+				", floor:" + floor +
 				", status:'" + status + '\'' +
 				", online:" + online +
 				", enabled:" + enabled +

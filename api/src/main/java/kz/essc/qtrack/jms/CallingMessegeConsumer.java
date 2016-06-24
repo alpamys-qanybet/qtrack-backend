@@ -26,8 +26,9 @@ public class CallingMessegeConsumer implements MessageListener {
                 String lang = message.getStringProperty("lang");
                 String code = message.getStringProperty("code");
                 String cabinet = message.getStringProperty("cabinet");
+                int floor = message.getIntProperty("floor");
 
-//                System.out.println("code " + code + " cabinet " + cabinet);
+//                System.out.println("code " + code + " cabinet " + cabinet + " floor " + floor);
 
 //                boolean withPrefix = true;
                 boolean withPostfix = true;
@@ -74,11 +75,11 @@ public class CallingMessegeConsumer implements MessageListener {
                     digitsCabinet = digitize(cabinet);
                 ArrayList<String> list = null;
                 if (lang.equals("kz") || lang.equals("kk"))
-                    list = speachKz(digitsCode, digitsCabinet, withPostfix);
+                    list = speachKz(digitsCode, digitsCabinet, withPostfix, floor);
                 else if (lang.equals("en"))
-                    list = speachEn(digitsCode, digitsCabinet, withPostfix);
+                    list = speachEn(digitsCode, digitsCabinet, withPostfix, floor);
                 else if (lang.equals("ru"))
-                    list = speachRu(digitsCode, digitsCabinet, withPostfix);
+                    list = speachRu(digitsCode, digitsCabinet, withPostfix, floor);
 
 
 //              123
@@ -108,7 +109,7 @@ public class CallingMessegeConsumer implements MessageListener {
         }
     }
 
-    private synchronized ArrayList<String> speachEn(int [] a, int [] b, boolean withLabel) {
+    private synchronized ArrayList<String> speachEn(int [] a, int [] b, boolean withLabel, int floor) {
         path = relPath+"/en/rachel/wav/";
         ArrayList<String> list = new ArrayList<>();
 
@@ -118,7 +119,10 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachEnDigit(a))
             list.add(s);
 
-        list.add(path+"gotoflooronecabinet"+format);
+        if (floor == 1)
+            list.add(path+"gotoflooronecabinet"+format);
+        else if (floor == 2)
+            list.add(path+"gotofloortwocabinet"+format);
 
         for(String s: speachEnDigit(b))
             list.add(s);
@@ -240,7 +244,7 @@ public class CallingMessegeConsumer implements MessageListener {
         return list;
     }
 
-    private ArrayList<String> speachKz(int [] a, int [] b, boolean withLabel) {
+    private ArrayList<String> speachKz(int [] a, int [] b, boolean withLabel, int floor) {
         path = relPath+"/kz/fatima/louder/wav/";
         ArrayList<String> list = new ArrayList<>();
 
@@ -251,7 +255,13 @@ public class CallingMessegeConsumer implements MessageListener {
             list.add(s);
 
 //        list.add(path+"n"+format);
-        list.add(path+"gotofloorone"+format);
+//        list.add(path+"gotofloorone"+format);
+
+        if (floor == 1)
+            list.add(path+"gotofloorone"+format);
+        else if (floor == 2)
+            list.add(path+"gotofloortwo"+format);
+
 
         for(String s: speachKzDigit(b))
             list.add(s);
@@ -373,7 +383,7 @@ public class CallingMessegeConsumer implements MessageListener {
         return list;
     }
 
-    private synchronized ArrayList<String> speachRu(int [] a, int [] b, boolean withLabel) {
+    private synchronized ArrayList<String> speachRu(int [] a, int [] b, boolean withLabel, int floor) {
         path = relPath+"/ru/wav/";
         ArrayList<String> list = new ArrayList<>();
 
@@ -383,7 +393,11 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachRuDigit(a))
             list.add(s);
 
-        list.add(path+"gotoflooronecabinet"+format);
+//        list.add(path+"gotoflooronecabinet"+format);
+        if (floor == 1)
+            list.add(path+"gotoflooronecabinet"+format);
+        else if (floor == 2)
+            list.add(path+"gotofloortwocabinet"+format);
 
         for(String s: speachRuDigit(b))
             list.add(s);
