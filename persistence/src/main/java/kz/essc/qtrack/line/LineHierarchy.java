@@ -14,6 +14,7 @@ public class LineHierarchy implements Serializable {
     private LineHierarchy parent;
     private List<LineHierarchy> children = new ArrayList<>();
     private List<Line> lines;
+    private Boolean enabled = false;
 
     @Id
     @Column(name="id_")
@@ -48,5 +49,13 @@ public class LineHierarchy implements Serializable {
     }
     public void setLines(List<Line> lines) {
         this.lines = lines;
+    }
+
+    @Column(name="enabled_")
+    public Boolean getEnabled() {
+        return enabled;
+    }
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

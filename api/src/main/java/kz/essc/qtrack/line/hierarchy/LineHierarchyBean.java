@@ -148,12 +148,12 @@ public class LineHierarchyBean {
             em.merge(hierarchy.getParent());
 
             hierarchy.setParent(null);
-            em.merge(hierarchy);
+            hierarchy = em.merge(hierarchy);
         }
         else if ( oldIsRoot && !newIsRoot ) {
             LineHierarchy newParent = (LineHierarchy) em.find(LineHierarchy.class, wrapper.getParentId());
             hierarchy.setParent(newParent);
-            em.merge(hierarchy);
+            hierarchy = em.merge(hierarchy);
         }
         else {
             hierarchy.getParent().getChildren().remove(hierarchy);
@@ -161,7 +161,7 @@ public class LineHierarchyBean {
 
             LineHierarchy newParent = (LineHierarchy) em.find(LineHierarchy.class, wrapper.getParentId());
             hierarchy.setParent(newParent);
-            em.merge(hierarchy);
+            hierarchy = em.merge(hierarchy);
         }
 
         for (Language lang: langBean.getLanguages()) {
@@ -174,6 +174,9 @@ public class LineHierarchyBean {
 
             em.merge(message);
         }
+
+        hierarchy.setEnabled(wrapper.getEnabled());
+        hierarchy = em.merge(hierarchy);
 
         return hierarchy;
     }

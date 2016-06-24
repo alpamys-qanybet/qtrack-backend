@@ -124,6 +124,7 @@ public class LineBean {
         Line line = (Line) em.find(Line.class, id);
 
         line.setName(wrapper.getNameKz());
+        line.setEnabled(wrapper.getEnabled());
 
         String prefixOld = line.getPrefix();
         prefixOld = prefixOld.toLowerCase();

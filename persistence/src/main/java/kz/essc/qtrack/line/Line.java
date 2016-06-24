@@ -25,7 +25,7 @@ public class Line implements Serializable {
     private int counterEnd = 9999;
     private int limit = 20;
     private int limitAdditional = 0;
-    private Boolean enabled;
+    private Boolean enabled = false;
     private LineHierarchy lineHierarchy;
     private Date begin;
     private Date end;

@@ -12,6 +12,7 @@ public class LineHierarchyWrapper {
     private String nameEn;
     private String nameRu;
     private long parentId;
+    private Boolean enabled;
 
     public long getId() {
         return id;
@@ -48,11 +49,19 @@ public class LineHierarchyWrapper {
         this.parentId = parentId;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public static LineHierarchyWrapper wrap(LineHierarchy hierarchy){
         LineHierarchyWrapper wrapper = new LineHierarchyWrapper();
 
         try {
             wrapper.setId(hierarchy.getId());
+            wrapper.setEnabled(hierarchy.getEnabled());
             wrapper.setParentId(hierarchy.getParent().getId());
         }
         catch(NullPointerException npe) {
@@ -78,6 +87,7 @@ public class LineHierarchyWrapper {
                 ", nameEn:'" + nameEn + '\'' +
                 ", nameRu:'" + nameRu + '\'' +
                 ", parentId:" + parentId +
+                ", enabled:" + enabled +
                 '}';
     }
 }
