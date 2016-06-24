@@ -128,6 +128,30 @@ public class ClientBean {
             }
             else {
                 Date date = wrapper.getDate(); // specified date that come from UI
+
+                Calendar cal1 = Calendar.getInstance();
+                cal1.setTime(date);
+                cal1.set(Calendar.SECOND, 0);
+                cal1.set(Calendar.MILLISECOND, 0);
+
+                Date dateCheckBegin = cal1.getTime();
+
+                Calendar cal2 = Calendar.getInstance();
+                cal2.setTime(date);
+                cal2.set(Calendar.SECOND, 59);
+                cal2.set(Calendar.MILLISECOND, 99);
+
+                Date dateCheckEnd = cal2.getTime();
+
+                Long count = (Long) em.createQuery("select count(c) from Client c "+
+                        "where c.date >= :begin and c.date <= :end ")
+                        .setParameter("begin", dateCheckBegin)
+                        .setParameter("end", dateCheckEnd)
+                        .getSingleResult();
+
+                if (count > 0)
+                    return null;
+
                 LineAppointment la = lineBean.getLA(line.getId(), date);
 
                 if (la.getCounter() == line.getCounterEnd() || la.getCounter() == 0) // 999

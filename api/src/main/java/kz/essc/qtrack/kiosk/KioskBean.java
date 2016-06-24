@@ -179,6 +179,10 @@ public class KioskBean {
 
     public long createClient(Long lineId, ClientWrapper clientWrapper) {
         Client client = clientBean.add(lineId, clientWrapper);
+
+        if (client == null)
+            return -1L;
+
         Line line = lineBean.get(lineId);
 
 //        int begin = clientBean.toMinutes(line.getBegin());
