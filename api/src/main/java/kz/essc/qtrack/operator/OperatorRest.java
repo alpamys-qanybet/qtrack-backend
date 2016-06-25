@@ -52,7 +52,9 @@ public class OperatorRest {
     @Path("/{id}")
     @Transactional
     public OperatorWrapper edit(@PathParam("id") Long id, OperatorWrapper userWrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return OperatorWrapper.wrapInherited(operatorBean.edit(id, userWrapper) );
         }
         else {

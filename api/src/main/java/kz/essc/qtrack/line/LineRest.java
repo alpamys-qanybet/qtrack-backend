@@ -57,7 +57,9 @@ public class LineRest {
     @Path("/")
     @Transactional
     public LineWrapper add(LineWrapper LineWrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return LineWrapper.wrap( lineBean.add(LineWrapper) );
         }
         else {
@@ -70,7 +72,9 @@ public class LineRest {
     @Path("/{id}")
     @Transactional
     public LineWrapper edit(@PathParam("id") Long id, LineWrapper wrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return LineWrapper.wrap( lineBean.edit(id, wrapper) );
         }
         else {
@@ -82,20 +86,16 @@ public class LineRest {
     @GET
     @Path("/{id}/operators")
     public List<OperatorWrapper> getOperators(@PathParam("id") Long id) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
-            return OperatorWrapper.wrapInherited(lineBean.getOperators(id));
-        }
-        else {
-            response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-            return null;
-        }
+        return OperatorWrapper.wrapInherited(lineBean.getOperators(id));
     }
 
     @POST
     @Path("/{id}/operators")
     @Transactional
     public GenericWrapper addOperator(@PathParam("id") Long id, OperatorWrapper operatorWrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return GenericWrapper.wrap(lineBean.addOperator(id, operatorWrapper));
         }
         else {
@@ -108,7 +108,9 @@ public class LineRest {
     @Path("/{id}/operators/{operatorId}")
     @Transactional
     public GenericWrapper deleteOperator(@PathParam("id") Long id, @PathParam("operatorId") Long operatorId) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return GenericWrapper.wrap(lineBean.removeOperator(id, operatorId));
         }
         else {
@@ -121,7 +123,9 @@ public class LineRest {
     @GET
     @Path("/{id}/clients")
     public List<ClientWrapper> getClients(@PathParam("id") Long id) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return ClientWrapper.wrap(lineBean.getClients(id));
         }
         else {

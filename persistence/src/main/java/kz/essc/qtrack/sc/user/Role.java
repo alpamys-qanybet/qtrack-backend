@@ -15,7 +15,7 @@ public class Role implements Serializable {
 	private String name;
 
 	public enum Name {
-		ADMIN, MANAGER, OPERATOR
+		ADMIN, HEAD, MANAGER, OPERATOR
 	}
 
 	@Id

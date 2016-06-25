@@ -35,7 +35,9 @@ public class ConfigRest {
     @POST
     @Path("/")
     public GenericWrapper put(ConfigWrapper w) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             configBean.put(w);
             return GenericWrapper.wrap(true);
         }

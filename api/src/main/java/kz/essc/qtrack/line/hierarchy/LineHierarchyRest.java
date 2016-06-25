@@ -63,7 +63,9 @@ public class LineHierarchyRest {
     @Path("/")
     @Transactional
     public LineHierarchyWrapper add(LineHierarchyWrapper wrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return LineHierarchyWrapper.wrap( lineHierarchyBean.add(wrapper) );
         }
         else {
@@ -76,7 +78,9 @@ public class LineHierarchyRest {
     @Path("/{id}")
     @Transactional
     public LineHierarchyWrapper edit(@PathParam("id") Long id, LineHierarchyWrapper wrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return LineHierarchyWrapper.wrap( lineHierarchyBean.edit(id, wrapper) );
         }
         else {
@@ -89,7 +93,9 @@ public class LineHierarchyRest {
     @Path("/{id}")
     @Transactional
     public GenericWrapper delete(@PathParam("id") Long id) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             lineHierarchyBean.delete(id);
             return GenericWrapper.wrap(true);
         }
@@ -117,7 +123,9 @@ public class LineHierarchyRest {
     @Path("/{id}/lines")
     @Transactional
     public GenericWrapper addLine(@PathParam("id") Long id, LineWrapper lineWrapper) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return GenericWrapper.wrap(lineHierarchyBean.addLine(id, lineWrapper));
         }
         else {
@@ -130,7 +138,9 @@ public class LineHierarchyRest {
     @Path("/{id}/lines/{lineId}")
     @Transactional
     public GenericWrapper deleteLine(@PathParam("id") Long id, @PathParam("lineId") Long lineId) throws IOException {
-        if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+        boolean isAdmin = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN);
+        boolean isManager = securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.MANAGER);
+        if (isAdmin || isManager) {
             return GenericWrapper.wrap(lineHierarchyBean.removeLine(id, lineId));
         }
         else {
