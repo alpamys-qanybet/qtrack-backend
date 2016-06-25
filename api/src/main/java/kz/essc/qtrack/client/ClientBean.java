@@ -73,6 +73,9 @@ public class ClientBean {
             Date now = new Date();
 
             if (line.getIsRaw()) {
+                if (line.getSize() == line.getLimit() + line.getLimitAdditional())
+                    return null;
+
                 Date todayBegin = new Date();
                 todayBegin.setHours(0);
                 todayBegin.setMinutes(0);
@@ -410,6 +413,12 @@ public class ClientBean {
         try {
             Client client = (Client) em.find(Client.class, id);
             Line line = (Line) em.find(Line.class, wrapper.getLineId());
+
+            if (line.getSize() == line.getLimit() + line.getLimitAdditional())
+                return null;
+            else
+                line.setSize(line.getSize() + 1);
+
             Line prev = client.getLine();
 
             int sentClientOrder = 0;

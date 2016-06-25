@@ -127,7 +127,11 @@ public class ClientRest {
     public ClientWrapper send(@PathParam("id") Long id, ClientWrapper wrapper) throws IOException {
         String login = request.getUserPrincipal().getName();
         if (securityBean.hasRole(login, Role.Name.OPERATOR)) {
-            return ClientWrapper.wrap(clientBean.send(id, wrapper, login));
+            Client client = clientBean.send(id, wrapper, login);
+            if (client == null)
+                return null;
+
+            return ClientWrapper.wrap(client);
         } else {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
             return null;
