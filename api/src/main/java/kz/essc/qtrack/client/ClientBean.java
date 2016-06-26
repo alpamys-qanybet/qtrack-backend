@@ -7,6 +7,7 @@ import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.sc.user.User;
 import kz.essc.qtrack.user.UserBean;
 import kz.essc.qtrack.websocket.infotable.WsInfotableBean;
+import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
 import kz.essc.qtrack.websocket.operator.WsOperatorBean;
 import kz.essc.qtrack.websocket.operator.display.WsOperatorDisplayBean;
 import org.codehaus.jettison.json.JSONArray;
@@ -35,6 +36,9 @@ public class ClientBean {
 
     @Inject
     WsOperatorDisplayBean wsOperatorDisplayBean;
+
+    @Inject
+    WsMonitoringBean wsMonitoringBean;
 
     @Inject
     LineBean lineBean;
@@ -241,6 +245,8 @@ public class ClientBean {
 
             wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
 
+            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
+
             JSONObject jsonInfo = new JSONObject();
             jsonInfo.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
             List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
@@ -307,6 +313,8 @@ public class ClientBean {
 
             wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
 
+            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
+
             JSONObject jsonInfo = new JSONObject();
             jsonInfo.put("event", KioskBean.Event.SKIP_CLIENT.toString());
             List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
@@ -343,7 +351,9 @@ public class ClientBean {
 
         int create = toMinutes(client.getDate());
         int start = toMinutes(now);
-        process.setWait(start-create);
+        process.setWait(start - create);
+        if (Math.abs(now.getSeconds() - client.getDate().getSeconds()) > 20)
+            process.setWait(process.getWait()+1);
 
         em.persist(process);
 
@@ -367,6 +377,8 @@ public class ClientBean {
             jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
             wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+
+            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
         }
         catch(JSONException je) {
 //            je.printStackTrace();
@@ -383,6 +395,9 @@ public class ClientBean {
         int begin = toMinutes(process.getBegin());
         int end = toMinutes(now);
         process.setHandling(end - begin);
+
+        if (Math.abs(process.getBegin().getSeconds() - now.getSeconds()) > 20)
+            process.setHandling(process.getHandling()+1);
 
         em.merge(process);
 
@@ -402,6 +417,8 @@ public class ClientBean {
             jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
             wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+
+            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
         }
         catch(JSONException je) {
 //            je.printStackTrace();
@@ -496,6 +513,8 @@ public class ClientBean {
 
             wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
 
+            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
+
             JSONObject jsonInfo = new JSONObject();
             jsonInfo.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
             List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
@@ -565,6 +584,8 @@ public class ClientBean {
             jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
             wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+
+            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             return true;
         }

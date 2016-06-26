@@ -8,6 +8,7 @@ import kz.essc.qtrack.operator.OperatorBean;
 import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.process.ProcessWrapper;
 import kz.essc.qtrack.sc.user.User;
+import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
 import kz.essc.qtrack.websocket.operator.WsOperatorBean;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -47,6 +48,9 @@ public class KioskBean {
 
     @Inject
     WsOperatorBean wsOperatorBean;
+
+    @Inject
+    WsMonitoringBean wsMonitoringBean;
 
     @Inject
     LangBean langBean;
@@ -211,6 +215,7 @@ public class KioskBean {
             jsonObj.put("initiator", "kiosk");
 
             wsOperatorBean.sendMessageOverSocket(jsonObj.toString(), "1");
+            wsMonitoringBean.sendMessageOverSocket(jsonObj.toString(), "1");
         }
         catch (JSONException e) {
 //            e.printStackTrace();
