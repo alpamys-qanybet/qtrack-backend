@@ -6,10 +6,10 @@ import kz.essc.qtrack.line.*;
 import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.sc.user.User;
 import kz.essc.qtrack.user.UserBean;
-import kz.essc.qtrack.websocket.infotable.WsInfotableBean;
+//import kz.essc.qtrack.websocket.infotable.WsInfotableBean;
 import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
 import kz.essc.qtrack.websocket.operator.WsOperatorBean;
-import kz.essc.qtrack.websocket.operator.display.WsOperatorDisplayBean;
+//import kz.essc.qtrack.websocket.operator.display.WsOperatorDisplayBean;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -31,11 +31,11 @@ public class ClientBean {
     @Inject
     WsOperatorBean wsOperatorBean;
 
-    @Inject
-    WsInfotableBean wsInfotableBean;
+//    @Inject
+//    WsInfotableBean wsInfotableBean;
 
-    @Inject
-    WsOperatorDisplayBean wsOperatorDisplayBean;
+//    @Inject
+//    WsOperatorDisplayBean wsOperatorDisplayBean;
 
     @Inject
     WsMonitoringBean wsMonitoringBean;
@@ -151,9 +151,11 @@ public class ClientBean {
                 Date dateCheckEnd = cal2.getTime();
 
                 Long count = (Long) em.createQuery("select count(c) from Client c "+
-                        "where c.date >= :begin and c.date <= :end ")
+                        "where c.date >= :begin and c.date <= :end " +
+                        "and c.line.id = :lineId")
                         .setParameter("begin", dateCheckBegin)
                         .setParameter("end", dateCheckEnd)
+                        .setParameter("lineId", line.getId())
                         .getSingleResult();
 
                 if (count > 0)
@@ -247,19 +249,19 @@ public class ClientBean {
 
             wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
 
-            JSONObject jsonInfo = new JSONObject();
-            jsonInfo.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
-            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
-            jsonInfo.put("list", new JSONArray(list.toString()));
+//            JSONObject jsonInfo = new JSONObject();
+//            jsonInfo.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
+//            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
+//            jsonInfo.put("list", new JSONArray(list.toString()));
+//
+//            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
 
-            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
+//            JSONObject jsonDisplay = new JSONObject();
+//            jsonDisplay.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
+//            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
+//            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
-            JSONObject jsonDisplay = new JSONObject();
-            jsonDisplay.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
-            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
-            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-
-            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             messageSender.sendMessage(ClientWrapper.wrap(client));
 
@@ -315,19 +317,19 @@ public class ClientBean {
 
             wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
 
-            JSONObject jsonInfo = new JSONObject();
-            jsonInfo.put("event", KioskBean.Event.SKIP_CLIENT.toString());
-            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
-            jsonInfo.put("list", new JSONArray(list.toString()));
+//            JSONObject jsonInfo = new JSONObject();
+//            jsonInfo.put("event", KioskBean.Event.SKIP_CLIENT.toString());
+//            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
+//            jsonInfo.put("list", new JSONArray(list.toString()));
+//
+//            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
+//
+//            JSONObject jsonDisplay = new JSONObject();
+//            jsonDisplay.put("event", KioskBean.Event.SKIP_CLIENT.toString());
+//            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
+//            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
-            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
-
-            JSONObject jsonDisplay = new JSONObject();
-            jsonDisplay.put("event", KioskBean.Event.SKIP_CLIENT.toString());
-            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
-            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-
-            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
         }
         catch (Exception e) {
 //            e.printStackTrace();
@@ -364,19 +366,19 @@ public class ClientBean {
 
 
         try {
-            JSONObject jsonInfo = new JSONObject();
-            jsonInfo.put("event", KioskBean.Event.OPERATOR_START_PROCESS.toString());
-            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
-            jsonInfo.put("list", new JSONArray(list.toString()));
-
-            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
+//            JSONObject jsonInfo = new JSONObject();
+//            jsonInfo.put("event", KioskBean.Event.OPERATOR_START_PROCESS.toString());
+//            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
+//            jsonInfo.put("list", new JSONArray(list.toString()));
+//
+//            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
 
             JSONObject jsonDisplay = new JSONObject();
             jsonDisplay.put("event", KioskBean.Event.OPERATOR_START_PROCESS.toString());
             jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
             jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
-            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
         }
@@ -416,7 +418,7 @@ public class ClientBean {
             jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
             jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
-            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
         }
@@ -515,19 +517,19 @@ public class ClientBean {
 
             wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
 
-            JSONObject jsonInfo = new JSONObject();
-            jsonInfo.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
-            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
-            jsonInfo.put("list", new JSONArray(list.toString()));
+//            JSONObject jsonInfo = new JSONObject();
+//            jsonInfo.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
+//            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
+//            jsonInfo.put("list", new JSONArray(list.toString()));
+//
+//            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
+//
+//            JSONObject jsonDisplay = new JSONObject();
+//            jsonDisplay.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
+//            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
+//            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
-            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
-
-            JSONObject jsonDisplay = new JSONObject();
-            jsonDisplay.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
-            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
-            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-
-            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             return client;
         }
@@ -571,19 +573,19 @@ public class ClientBean {
             em.merge(line);
             em.remove(client);
 
-            JSONObject jsonInfo = new JSONObject();
-            jsonInfo.put("event", KioskBean.Event.REMOVE_CLIENT.toString());
-            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
-            jsonInfo.put("list", new JSONArray(list.toString()));
-
-            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
+//            JSONObject jsonInfo = new JSONObject();
+//            jsonInfo.put("event", KioskBean.Event.REMOVE_CLIENT.toString());
+//            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
+//            jsonInfo.put("list", new JSONArray(list.toString()));
+//
+//            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
 
             JSONObject jsonDisplay = new JSONObject();
             jsonDisplay.put("event", KioskBean.Event.REMOVE_CLIENT.toString());
             jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
             jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
-            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
