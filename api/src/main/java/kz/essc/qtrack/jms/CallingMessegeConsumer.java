@@ -1,5 +1,7 @@
 package kz.essc.qtrack.jms;
 
+import kz.essc.qtrack.core.resource.ResourceBean;
+
 import javax.ejb.MessageDriven;
 import javax.jms.*;
 import javax.sound.sampled.*;
@@ -14,8 +16,8 @@ public class CallingMessegeConsumer implements MessageListener {
     private static boolean isPlaying = false;
     static ArrayList<String> files = new ArrayList<>();
     private static int index = 0;
-//    String relPath = "D:/server/numbers";
-    String relPath = "/home/alpamys/Downloads/numbers";
+
+    String relPath = ResourceBean.getSoundPath();
     String path = relPath+"/en/rachel/wav/";
     String format = ".wav";
 

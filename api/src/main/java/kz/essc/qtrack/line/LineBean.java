@@ -322,6 +322,14 @@ public class LineBean {
         return getAvailableClients(id, w.getDate());
     }
 
+    public List<Client> getReservedClients(Long id, FilterWrapper w) {
+        return getReservedClients(id, w.getDate());
+    }
+
+    public List<Client> getFilteredClients(Long id, FilterWrapper w) {
+        return getFilteredClients(id, w.getDate());
+    }
+
     public List<Client> getAvailableClients(Long id, Date date) {
         try {
 //            Line line = (Line) em.find(Line.class, id);
@@ -345,6 +353,71 @@ public class LineBean {
                     "order by c.order")
                     .setParameter("id", id)
                     .setParameter("status", Client.Status.WAITING.toString())
+                    .setParameter("begin", begin)
+                    .setParameter("end", end)
+                    .getResultList();
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Client> getReservedClients(Long id, Date date) {
+        try {
+//            Line line = (Line) em.find(Line.class, id);
+            Date begin = new Date();
+            begin.setDate(date.getDate());
+            begin.setMonth(date.getMonth());
+            begin.setYear(date.getYear());
+            begin.setHours(0);
+            begin.setMinutes(0);
+            Date end = new Date();
+            end.setDate(begin.getDate());
+            end.setMonth(begin.getMonth());
+            end.setYear(begin.getYear());
+            end.setHours(23);
+            end.setMinutes(59);
+
+            return em.createQuery("select c from Client c " +
+                    "where c.line.id = :id "+
+                    "and c.date >= :begin and c.date <= :end " +
+//                    "and c.status = :status " +
+                    "order by c.order")
+                    .setParameter("id", id)
+//                    .setParameter("status", Client.Status.WAITING.toString())
+                    .setParameter("begin", begin)
+                    .setParameter("end", end)
+                    .getResultList();
+        }
+        catch (Exception e) {
+//            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Client> getFilteredClients(Long id, Date date) {
+        try {
+//            Line line = (Line) em.find(Line.class, id);
+            Calendar cal1 = Calendar.getInstance();
+            cal1.setTime(date);
+            cal1.set(Calendar.SECOND, 0);
+            cal1.set(Calendar.MILLISECOND, 0);
+
+            Date begin = cal1.getTime();
+
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(date);
+            cal2.set(Calendar.SECOND, 59);
+            cal2.set(Calendar.MILLISECOND, 999);
+
+            Date end = cal2.getTime();
+
+            return em.createQuery("select c from Client c " +
+                    "where c.line.id = :id "+
+                    "and c.date >= :begin and c.date <= :end " +
+                    "order by c.order")
+                    .setParameter("id", id)
                     .setParameter("begin", begin)
                     .setParameter("end", end)
                     .getResultList();

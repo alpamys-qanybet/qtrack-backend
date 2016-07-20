@@ -8,8 +8,9 @@ import kz.essc.qtrack.operator.OperatorBean;
 import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.process.ProcessWrapper;
 import kz.essc.qtrack.sc.user.User;
-import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
-import kz.essc.qtrack.websocket.operator.WsOperatorBean;
+import kz.essc.qtrack.user.UserBean;
+//import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
+//import kz.essc.qtrack.websocket.operator.WsOperatorBean;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -47,10 +48,13 @@ public class KioskBean {
     OperatorBean operatorBean;
 
     @Inject
-    WsOperatorBean wsOperatorBean;
+    UserBean userBean;
 
-    @Inject
-    WsMonitoringBean wsMonitoringBean;
+//    @Inject
+//    WsOperatorBean wsOperatorBean;
+
+//    @Inject
+//    WsMonitoringBean wsMonitoringBean;
 
     @Inject
     LangBean langBean;
@@ -128,6 +132,65 @@ public class KioskBean {
         return json.toString();
     }
 
+    public String noWsOperatorRest(Long operatorId) throws JSONException{
+        JSONObject json = new JSONObject();
+
+        User operator = userBean.get(operatorId);
+
+        JSONObject operatorJson = new JSONObject();
+        operatorJson.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+
+        clientBean.checkOldDayClient(operator);
+        /*Date now = new Date();
+        Date d2300 = new Date();
+        d2300.setHours(23);
+        d2300.setMinutes(0);
+        Date d2350 = new Date();
+        d2350.setHours(23);
+        d2350.setMinutes(50);
+        if ( (clientBean.toMinutes(d2300) < clientBean.toMinutes(now)) &&  (clientBean.toMinutes(now) < clientBean.toMinutes(d2350)) )
+            clientBean.checkOldDayClient(operator);
+
+        Date d600 = new Date();
+        d600.setHours(6);
+        d600.setMinutes(0);
+        Date d650 = new Date();
+        d650.setHours(6);
+        d650.setMinutes(50);
+        if ( (clientBean.toMinutes(d600) < clientBean.toMinutes(now)) &&  (clientBean.toMinutes(now) < clientBean.toMinutes(d650)) )
+            clientBean.checkOldDayClient(operator);*/
+
+        if (operator.getClient() == null) {
+            operatorJson.put("current", "null");
+        }
+        else {
+            operatorJson.put("current", new JSONObject(ClientWrapper.wrap(operator.getClient()).toString()));
+            if (operator.getClient().getStatus().equals(Client.Status.IN_PROCESS.toString())) {
+                try{
+                    Process process = (Process) em.createQuery("select p from Process p " +
+                            "where p.clientId = :clientId " +
+                            "and p.operatorId = :operatorId " +
+                            "and p.end is null")
+                            .setParameter("clientId", operator.getClient().getId())
+                            .setParameter("operatorId", operator.getId())
+                            .getSingleResult();
+
+                    operatorJson.put("process", new JSONObject(ProcessWrapper.wrap(process).toString()));
+                }
+                catch(NoResultException nre) {
+                }
+            }
+        }
+        json.put("operator", operatorJson);
+        List<LineWrapper> lines = LineWrapper.wrap(lineBean.get());
+        Line line = operator.getLine();
+        json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
+        json.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
+        json.put("lines", new JSONArray(lines.toString()));
+
+        return json.toString();
+    }
+
     public String messageOnLaunchOperatorDisplay() throws JSONException {
         JSONObject json = new JSONObject();
 
@@ -187,7 +250,7 @@ public class KioskBean {
         if (client == null)
             return -1L;
 
-        Line line = lineBean.get(lineId);
+//        Line line = lineBean.get(lineId);
 
 //        int begin = clientBean.toMinutes(line.getBegin());
 //        int end = clientBean.toMinutes(line.getEnd());
@@ -204,22 +267,22 @@ public class KioskBean {
 //                    .getSingleResult();
 //        }
 
-        try {
-            JSONObject jsonObj = new JSONObject();
+//        try {
+//            JSONObject jsonObj = new JSONObject();
+//
+//            jsonObj.put("event", KioskBean.Event.ADD_CLIENT_TO_LINE.toString());
+//            jsonObj.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//            jsonObj.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
+//            jsonObj.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
+//
+//            jsonObj.put("initiator", "kiosk");
 
-            jsonObj.put("event", KioskBean.Event.ADD_CLIENT_TO_LINE.toString());
-            jsonObj.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-            jsonObj.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
-            jsonObj.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
-
-            jsonObj.put("initiator", "kiosk");
-
-            wsOperatorBean.sendMessageOverSocket(jsonObj.toString(), "1");
-            wsMonitoringBean.sendMessageOverSocket(jsonObj.toString(), "1");
-        }
-        catch (JSONException e) {
-//            e.printStackTrace();
-        }
+//            wsOperatorBean.sendMessageOverSocket(jsonObj.toString(), "1");
+//            wsMonitoringBean.sendMessageOverSocket(jsonObj.toString(), "1");
+//        }
+//        catch (JSONException e) {
+////            e.printStackTrace();
+//        }
 
         return client.getId();
     }

@@ -1,5 +1,6 @@
 package kz.essc.qtrack.config;
 
+import kz.essc.qtrack.core.resource.ResourceBean;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -12,9 +13,7 @@ import java.util.Scanner;
 
 @RequestScoped
 public class ConfigBean {
-    private final String path = "/home/alpamys/dev/qtrack.config.json";
-//    private final String path = "D:/server/files/qtrack.config.json";
-//    private final String path = "D:/server/config/qtrack.config.json";
+    private final String path = ResourceBean.getConfigPath();
 
     public String get(String key) {
         return getProperty(key);

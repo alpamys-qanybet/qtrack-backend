@@ -98,6 +98,18 @@ public class KioskRest {
         return lineRest.getClientsAvailableFiltered(id, w);
     }
 
+    @POST
+    @Path("/line/{id}/clients/reserved")
+    public List<ClientWrapper> getClientsReservedFiltered(@PathParam("id") Long id, FilterWrapper w) throws IOException {
+        return lineRest.getClientsReservedFiltered(id, w);
+    }
+
+    @POST
+    @Path("/line/{id}/clients/filtered")
+    public List<ClientWrapper> getClientsFiltered(@PathParam("id") Long id, FilterWrapper w) throws IOException {
+        return lineRest.getClientsFiltered(id, w);
+    }
+
     @GET
     @Path("/genlp")
     @Transactional
@@ -116,6 +128,12 @@ public class KioskRest {
     public TicketWrapper getClient(@PathParam("id") Long id) {
         TicketWrapper wrap = TicketWrapper.wrap(clientBean.get(id));
         return kioskBean.translated(wrap);
+    }
+
+    @GET
+    @Path("/client/{id}/exists")
+    public GenericWrapper isClientExists(@PathParam("id") Long id) {
+        return GenericWrapper.wrap(clientBean.get(id) != null);
     }
 
     @GET
@@ -201,6 +219,28 @@ public class KioskRest {
     public GenericWrapper getInfotableInfo() {
         try {
             return GenericWrapper.wrap(kioskBean.messageOnLaunchInfotable());
+        }
+        catch(JSONException e) {
+            return GenericWrapper.wrap("{}");
+        }
+    }
+
+    @GET
+    @Path("/operator/{operatorId}")
+    public GenericWrapper getOperatorInfo(@PathParam("operatorId") Long operatorId) {
+        try {
+            return GenericWrapper.wrap(kioskBean.noWsOperatorRest(operatorId));
+        }
+        catch(JSONException e) {
+            return GenericWrapper.wrap("{}");
+        }
+    }
+
+    @GET
+    @Path("/monitoring")
+    public GenericWrapper getMonitoring() {
+        try {
+            return GenericWrapper.wrap(kioskBean.messageOnLaunchOperator());
         }
         catch(JSONException e) {
             return GenericWrapper.wrap("{}");

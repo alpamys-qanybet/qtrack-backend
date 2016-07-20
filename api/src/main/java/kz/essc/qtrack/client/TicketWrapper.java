@@ -144,11 +144,12 @@ public class TicketWrapper {
 				if (operator.getCabinet() != null)
 					cabinets.add(operator.getCabinet());
 			}
+
 			wrapper.setOperators(operators);
 			wrapper.setCabinets(cabinets);
 		}
 		catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 		return wrapper;
 	}

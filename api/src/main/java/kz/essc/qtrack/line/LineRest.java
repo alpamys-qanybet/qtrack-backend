@@ -140,6 +140,19 @@ public class LineRest {
         return ClientWrapper.wrap(lineBean.getAvailableClients(id, w));
     }
 
+    @POST
+    @Path("/{id}/clients/reserved")
+    public List<ClientWrapper> getClientsReservedFiltered(@PathParam("id") Long id, FilterWrapper w) throws IOException {
+        return ClientWrapper.wrap(lineBean.getReservedClients(id, w));
+    }
+
+
+    @POST
+    @Path("/{id}/clients/filtered")
+    public List<ClientWrapper> getClientsFiltered(@PathParam("id") Long id, FilterWrapper w) throws IOException {
+        return ClientWrapper.wrap(lineBean.getFilteredClients(id, w));
+    }
+
     @GET
     @Path("/available")
     public List<LineWrapper> getAvailable() {

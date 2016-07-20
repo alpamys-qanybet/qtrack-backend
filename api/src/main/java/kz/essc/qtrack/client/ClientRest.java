@@ -100,7 +100,13 @@ public class ClientRest {
     public GenericWrapper start(@PathParam("id") Long id, ClientWrapper wrapper) throws IOException {
         String login = request.getUserPrincipal().getName();
         if (securityBean.hasRole(login, Role.Name.OPERATOR)) {
-            return GenericWrapper.wrap(clientBean.startProcess(id, wrapper).getId());
+            try {
+                return GenericWrapper.wrap(clientBean.startProcess(id, wrapper).getId());
+            }
+            catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+                return null;
+            }
         } else {
             response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
             return null;

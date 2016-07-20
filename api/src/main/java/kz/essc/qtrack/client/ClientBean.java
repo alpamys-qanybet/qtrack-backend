@@ -3,12 +3,13 @@ package kz.essc.qtrack.client;
 import kz.essc.qtrack.jms.CallingMessageProducer;
 import kz.essc.qtrack.kiosk.KioskBean;
 import kz.essc.qtrack.line.*;
+import kz.essc.qtrack.operator.OperatorBean;
 import kz.essc.qtrack.operator.OperatorWrapper;
 import kz.essc.qtrack.sc.user.User;
 import kz.essc.qtrack.user.UserBean;
 //import kz.essc.qtrack.websocket.infotable.WsInfotableBean;
-import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
-import kz.essc.qtrack.websocket.operator.WsOperatorBean;
+//import kz.essc.qtrack.websocket.monitoring.WsMonitoringBean;
+//import kz.essc.qtrack.websocket.operator.WsOperatorBean;
 //import kz.essc.qtrack.websocket.operator.display.WsOperatorDisplayBean;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
@@ -28,8 +29,8 @@ public class ClientBean {
     @PersistenceContext
     EntityManager em;
 
-    @Inject
-    WsOperatorBean wsOperatorBean;
+//    @Inject
+//    WsOperatorBean wsOperatorBean;
 
 //    @Inject
 //    WsInfotableBean wsInfotableBean;
@@ -37,8 +38,8 @@ public class ClientBean {
 //    @Inject
 //    WsOperatorDisplayBean wsOperatorDisplayBean;
 
-    @Inject
-    WsMonitoringBean wsMonitoringBean;
+//    @Inject
+//    WsMonitoringBean wsMonitoringBean;
 
     @Inject
     LineBean lineBean;
@@ -48,6 +49,9 @@ public class ClientBean {
 
     @Inject
     CallingMessageProducer messageSender;
+
+    @Inject
+    OperatorBean operatorBean;
 
     public List<Client> get() {
 
@@ -76,10 +80,17 @@ public class ClientBean {
             Client client = new Client();
             Date now = new Date();
 
-            if (line.getIsRaw()) {
-                if (line.getSize() == line.getLimit() + line.getLimitAdditional())
-                    return null;
+            for (User op: line.getOperators()) {
+//                System.out.println("check old day client op " + op.getShortname());
+                checkOldDayClient(op);
+            }
 
+//            for (User op: operatorBean.get()) {
+//                System.out.println("check old day client op " + op.getShortname());
+//                checkOldDayClient(op);
+//            }
+
+            if (line.getIsRaw()) {
                 Date todayBegin = new Date();
                 todayBegin.setHours(0);
                 todayBegin.setMinutes(0);
@@ -96,19 +107,30 @@ public class ClientBean {
                     .getSingleResult();
 
                 Long countTodayProcesses = (Long) em.createQuery("select count(p) from Process p "+
-                                                                 "where p.begin >= :begin and p.begin <= :end "+
+                                                                 "where p.begin >= :begin "+ // and p.begin <= :end
                                                                  "and p.lineId = :lineId")
                     .setParameter("begin", todayBegin)
-                    .setParameter("end", todayEnd)
+//                    .setParameter("end", todayEnd)
                     .setParameter("lineId", line.getId())
                     .getSingleResult();
 
-                if ((countTodayClients + countTodayProcesses) == 0) { // no clients today except deleted
-                    line.setCounter(line.getCounterBegin());
+//                System.out.println("today clients " + (countTodayClients + countTodayProcesses));
+
+                if ((countTodayClients + countTodayProcesses) == 0L) { // no clients today except deleted
+//                    line.setCounter(line.getCounterBegin());
+//                    line.setLimit(0);
                     line.setLimitAdditional(0);
+//                    line.setClients(new ArrayList<Client>());
                     line.setSize(0);
                 }
-                else if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0) // 999
+
+                if (line.getSize() >= line.getLimit() + line.getLimitAdditional())
+                    return null;
+
+                if ((countTodayClients + countTodayProcesses) == 0L) { // no clients today except deleted
+                    line.setCounter(line.getCounterBegin());
+                }
+                else if (line.getCounter() == line.getCounterEnd() || line.getCounter() == 0L) // 999
                     line.setCounter(line.getCounterBegin()); // 0
 
                 int counter = line.getCounter() + 1;
@@ -146,7 +168,7 @@ public class ClientBean {
                 Calendar cal2 = Calendar.getInstance();
                 cal2.setTime(date);
                 cal2.set(Calendar.SECOND, 59);
-                cal2.set(Calendar.MILLISECOND, 99);
+                cal2.set(Calendar.MILLISECOND, 999);
 
                 Date dateCheckEnd = cal2.getTime();
 
@@ -235,19 +257,19 @@ public class ClientBean {
             operator.setClient(client);
             em.merge(operator);
 
-            JSONObject json = new JSONObject();
+//            JSONObject json = new JSONObject();
+//
+//            json.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
+//            json.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//            json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
+//            json.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
+//
+//            User initiator = userBean.getUserByLogin(login);
+//            json.put("initiator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
 
-            json.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
-            json.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-            json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
-            json.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
+//            wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
 
-            User initiator = userBean.getUserByLogin(login);
-            json.put("initiator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
-
-            wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
-
-            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
+//            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
 
 //            JSONObject jsonInfo = new JSONObject();
 //            jsonInfo.put("event", KioskBean.Event.OPERATOR_CALL_CLIENT.toString());
@@ -302,20 +324,21 @@ public class ClientBean {
 
             client.setOperator(null);
             client.setStatus(Client.Status.WAITING.toString());
-            client = em.merge(client);
+            em.merge(client);
+//            client = em.merge(client);
 
-            JSONObject json = new JSONObject();
-            json.put("event", KioskBean.Event.SKIP_CLIENT.toString());
-            json.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-            json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
-            json.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
+//            JSONObject json = new JSONObject();
+//            json.put("event", KioskBean.Event.SKIP_CLIENT.toString());
+//            json.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//            json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
+//            json.put("clients", new JSONArray(ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString()));
+//
+//            User initiator = userBean.getUserByLogin(login);
+//            json.put("initiator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
 
-            User initiator = userBean.getUserByLogin(login);
-            json.put("initiator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
+//            wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
 
-            wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
-
-            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
+//            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
 
 //            JSONObject jsonInfo = new JSONObject();
 //            jsonInfo.put("event", KioskBean.Event.SKIP_CLIENT.toString());
@@ -337,35 +360,47 @@ public class ClientBean {
     }
 
     public Process startProcess(Long id, ClientWrapper wrapper) {
-        Date now = new Date();
-        Client client = (Client) em.find(Client.class, id);
-
-        client.setStatus(Client.Status.IN_PROCESS.toString());
-        client.setEvent(now);
-        em.merge(client);
-
-        Process process = new Process();
-        process.setClientCode(client.getCode());
-        process.setClientId(client.getId());
-        process.setLineId(wrapper.getLineId());
-        process.setOperatorId(wrapper.getOperatorId());
-        process.setBegin(now);
-
-        int create = toMinutes(client.getDate());
-        int start = toMinutes(now);
-        process.setWait(start - create);
-        if (Math.abs(now.getSeconds() - client.getDate().getSeconds()) > 20)
-            process.setWait(process.getWait()+1);
-
-        em.persist(process);
-
-        User operator = (User) em.find(User.class, wrapper.getOperatorId());
-        operator.setClient(client);
-
-        em.merge(operator);
-
-
         try {
+            Date now = new Date();
+            Client client = (Client) em.find(Client.class, id);
+
+            if (client.getDate().before(now) && client.getDate().getDate() != now.getDate())
+                return null;
+
+            client.setStatus(Client.Status.IN_PROCESS.toString());
+            client.setEvent(now);
+            em.merge(client);
+
+            Process process = new Process();
+            process.setClientCode(client.getCode());
+            process.setClientId(client.getId());
+            process.setLineId(wrapper.getLineId());
+            process.setOperatorId(wrapper.getOperatorId());
+            process.setBegin(now);
+
+            int create = toMinutes(client.getDate());
+            int start = toMinutes(now);
+            int waiting = start - create;
+            if (waiting < 1)
+                waiting = 1;
+            process.setWait(waiting);
+            if (Math.abs(now.getSeconds() - client.getDate().getSeconds()) > 20)
+                process.setWait(process.getWait() + 1);
+
+
+            em.persist(process);
+
+            User operator = (User) em.find(User.class, wrapper.getOperatorId());
+            operator.setClient(client);
+
+            em.merge(operator);
+
+            return process;
+        }
+        catch(Exception e) {}
+
+
+//        try {
 //            JSONObject jsonInfo = new JSONObject();
 //            jsonInfo.put("event", KioskBean.Event.OPERATOR_START_PROCESS.toString());
 //            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
@@ -373,20 +408,19 @@ public class ClientBean {
 //
 //            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
 
-            JSONObject jsonDisplay = new JSONObject();
-            jsonDisplay.put("event", KioskBean.Event.OPERATOR_START_PROCESS.toString());
-            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
-            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//            JSONObject jsonDisplay = new JSONObject();
+//            jsonDisplay.put("event", KioskBean.Event.OPERATOR_START_PROCESS.toString());
+//            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+//            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
 //            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
-            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
-        }
-        catch(JSONException je) {
+//            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//        }
+//        catch(JSONException je) {
 //            je.printStackTrace();
-        }
-
-        return process;
+//        }
+        return null;
     }
 
     public void stopProcess(Long id) {
@@ -396,14 +430,18 @@ public class ClientBean {
 
         int begin = toMinutes(process.getBegin());
         int end = toMinutes(now);
-        process.setHandling(end - begin);
+        int handling = begin - end;
+        if (handling < 1)
+            handling = 15;
+
+        process.setHandling(handling);
 
         if (Math.abs(process.getBegin().getSeconds() - now.getSeconds()) > 20)
             process.setHandling(process.getHandling()+1);
 
         em.merge(process);
 
-        try {
+//        try {
 //            JSONObject jsonInfo = new JSONObject();
 //            jsonInfo.put("event", KioskBean.Event.OPERATOR_STOP_PROCESS.toString());
 //            List<ClientWrapper> list = ClientWrapper.wrap(getCalledAndInprocessClients());
@@ -411,20 +449,20 @@ public class ClientBean {
 //
 //            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
 
-            Client client = (Client) em.find(Client.class, process.getClientId());
-            User operator = (User) em.find(User.class, process.getOperatorId());
-            JSONObject jsonDisplay = new JSONObject();
-            jsonDisplay.put("event", KioskBean.Event.OPERATOR_STOP_PROCESS.toString());
-            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
-            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-
-//            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
-
-            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
-        }
-        catch(JSONException je) {
-//            je.printStackTrace();
-        }
+//            Client client = (Client) em.find(Client.class, process.getClientId());
+//            User operator = (User) em.find(User.class, process.getOperatorId());
+//            JSONObject jsonDisplay = new JSONObject();
+//            jsonDisplay.put("event", KioskBean.Event.OPERATOR_STOP_PROCESS.toString());
+//            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+//            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//
+////            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//
+//            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//        }
+//        catch(JSONException je) {
+////            je.printStackTrace();
+//        }
     }
 
     // sending works to raw lines
@@ -502,20 +540,20 @@ public class ClientBean {
 
             client = em.merge(client);
 
-            JSONObject json = new JSONObject();
+//            JSONObject json = new JSONObject();
 
-            json.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
-            json.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
-            json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
-            json.put("clients", new JSONArray( ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString() ));
-            json.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+//            json.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
+//            json.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//            json.put("line", new JSONObject(LineWrapper.wrap(line).toString()));
+//            json.put("clients", new JSONArray( ClientWrapper.wrap(lineBean.getAvailableClients(line.getId())).toString() ));
+//            json.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+//
+//            User initiator = userBean.getUserByLogin(login);
+//            json.put("initiator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
 
-            User initiator = userBean.getUserByLogin(login);
-            json.put("initiator", new JSONObject(OperatorWrapper.wrapInherited(initiator).toString()));
+//            wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
 
-            wsOperatorBean.sendMessageOverSocket(json.toString(), "1");
-
-            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
+//            wsMonitoringBean.sendMessageOverSocket(json.toString(), "1");
 
 //            JSONObject jsonInfo = new JSONObject();
 //            jsonInfo.put("event", KioskBean.Event.SEND_CLIENT_TO_LINE.toString());
@@ -580,14 +618,14 @@ public class ClientBean {
 //
 //            wsInfotableBean.sendMessageOverSocket(jsonInfo.toString(), "1");
 
-            JSONObject jsonDisplay = new JSONObject();
-            jsonDisplay.put("event", KioskBean.Event.REMOVE_CLIENT.toString());
-            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
-            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
+//            JSONObject jsonDisplay = new JSONObject();
+//            jsonDisplay.put("event", KioskBean.Event.REMOVE_CLIENT.toString());
+//            jsonDisplay.put("operator", new JSONObject(OperatorWrapper.wrapInherited(operator).toString()));
+//            jsonDisplay.put("client", new JSONObject(ClientWrapper.wrap(client).toString()));
 
 //            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
-            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
+//            wsMonitoringBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
             return true;
         }
@@ -671,19 +709,21 @@ public class ClientBean {
             if (operator.getClient().getStatus().equals(Client.Status.IN_PROCESS.toString())) {
 //                System.out.println("IN PROCESS");
                 try{
-                    Process process = (Process) em.createQuery("select p from Process p " +
+                    List<Process> processes = em.createQuery("select p from Process p " +
                             "where p.clientId = :clientId " +
                             "and p.operatorId = :operatorId " +
                             "and p.end is null")
                             .setParameter("clientId", operator.getClient().getId())
                             .setParameter("operatorId", operator.getId())
-                            .getSingleResult();
+                            .getResultList();
 
-                    Date processEnd = new Date(process.getBegin().getTime());
-                    processEnd.setMinutes(processEnd.getMinutes() + 20);
-                    process.setEnd(processEnd);
+                    for (Process process: processes) {
+                        Date processEnd = new Date(process.getBegin().getTime());
+                        processEnd.setMinutes(processEnd.getMinutes() + 20);
+                        process.setEnd(processEnd);
 
-                    em.merge(process);
+                        em.merge(process);
+                    }
                 }
                 catch(NoResultException e) {
                     e.printStackTrace();
