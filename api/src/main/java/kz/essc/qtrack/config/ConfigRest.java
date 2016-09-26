@@ -88,4 +88,11 @@ public class ConfigRest {
     public GenericWrapper getOrganizationTextRu() {
         return GenericWrapper.wrap(configBean.get("orgtextru"));
     }
+
+    @GET
+    @Path("/speachEnabled")
+    public GenericWrapper getSpeachEnabled() {
+        return GenericWrapper.wrap(configBean.get("speachEnabled"));
+    }
+
 }

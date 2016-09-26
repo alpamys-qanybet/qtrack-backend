@@ -1,5 +1,6 @@
 package kz.essc.qtrack.jms;
 
+import kz.essc.qtrack.config.ConfigBean;
 import kz.essc.qtrack.core.resource.ResourceBean;
 
 import javax.ejb.MessageDriven;
@@ -30,71 +31,76 @@ public class CallingMessegeConsumer implements MessageListener {
                 String cabinet = message.getStringProperty("cabinet");
                 int floor = message.getIntProperty("floor");
 
-//                System.out.println("code " + code + " cabinet " + cabinet + " floor " + floor);
+                System.out.println("code " + code + " cabinet " + cabinet + " floor " + floor + " lang " + lang);
 
-//                boolean withPrefix = true;
-                boolean withPostfix = true;
-                /*switch (code.charAt(0)) {
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        withPrefix = false;
-                        break;
-                }*/
-
-                switch (cabinet.charAt(cabinet.length()-1)) {
-                    case '0':
-                    case '1':
-                    case '2':
-                    case '3':
-                    case '4':
-                    case '5':
-                    case '6':
-                    case '7':
-                    case '8':
-                    case '9':
-                        withPostfix = false;
-                        break;
-                }
-
-                int [] digitsCode, digitsCabinet;
-
-//                if (withPrefix)
-//                    digitsCode = digitize(code.substring(1));
-//                else
-                digitsCode = digitize(code);
-
-                if (withPostfix)
-                    digitsCabinet = digitize(cabinet.substring(0, cabinet.length() - 1));
-                else
-                    digitsCabinet = digitize(cabinet);
-                ArrayList<String> list = null;
-                if (lang.equals("kz") || lang.equals("kk"))
-                    list = speachKz(digitsCode, digitsCabinet, withPostfix, floor);
-                else if (lang.equals("en"))
-                    list = speachEn(digitsCode, digitsCabinet, withPostfix, floor);
-                else if (lang.equals("ru"))
-                    list = speachRu(digitsCode, digitsCabinet, withPostfix, floor);
-
-
-//              123
-/*
+                boolean speachEnabled = Boolean.parseBoolean(ConfigBean.get("speachEnabled"));
                 ArrayList<String> list = new ArrayList<>();
 
-                String path = relPath+"/en/wav/";
-                list.add(path+"1.wav");
-                list.add(path+"100.wav");
-                list.add(path+"20.wav");
-                list.add(path+"3.wav");
-*/
+                if (speachEnabled) {
+    //                boolean withPrefix = true;
+                        boolean withPostfix = true;
+                    /* switch (code.charAt(0)) {
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                            withPrefix = false;
+                            break;
+                    } */
 
+                    switch (cabinet.charAt(cabinet.length() - 1)) {
+                        case '0':
+                        case '1':
+                        case '2':
+                        case '3':
+                        case '4':
+                        case '5':
+                        case '6':
+                        case '7':
+                        case '8':
+                        case '9':
+                            withPostfix = false;
+                            break;
+                    }
+
+                    int[] digitsCode, digitsCabinet;
+
+    //                if (withPrefix)
+    //                    digitsCode = digitize(code.substring(1));
+    //                else
+                    digitsCode = digitize(code);
+
+                    if (withPostfix)
+                        digitsCabinet = digitize(cabinet.substring(0, cabinet.length() - 1));
+                    else
+                        digitsCabinet = digitize(cabinet);
+                    list = null;
+                    if (lang.equals("kz") || lang.equals("kk"))
+                        list = speachKz(digitsCode, digitsCabinet, withPostfix, floor);
+                    else if (lang.equals("en"))
+                        list = speachEn(digitsCode, digitsCabinet, withPostfix, floor);
+                    else if (lang.equals("ru"))
+                        list = speachRu(digitsCode, digitsCabinet, withPostfix, floor);
+//              123
+/*
+                    ArrayList<String> list = new ArrayList<>();
+
+                    String path = relPath+"/en/wav/";
+                    list.add(path+"1.wav");
+                    list.add(path+"100.wav");
+                    list.add(path+"20.wav");
+                    list.add(path+"3.wav");
+*/
+                }
+                else {
+                    list.add(relPath + "/notification.wav");
+                }
 //                System.out.println("isPlaying " + isPlaying);
                 if (isPlaying) {
                     for (String file: list)
@@ -126,6 +132,8 @@ public class CallingMessegeConsumer implements MessageListener {
         else if (floor == 2)
             list.add(path+"gotofloortwocabinet"+format);
 
+//        list.add(path+"cabinet"+format);
+
         for(String s: speachEnDigit(b))
             list.add(s);
 
@@ -154,6 +162,38 @@ public class CallingMessegeConsumer implements MessageListener {
                 list.add(path+first+format);
                 if (second != 0)
                     list.add(path+second+format);
+            }
+        }
+        else if (l == 3) {
+            int first = digits[0]*100;
+            int second = digits[1]*10;
+            int third = digits[2];
+            int n = first + second + third;
+
+            if (n < 20) {
+                list.add(path+n+format);
+            }
+            else if (n < 100){
+                list.add(path+second+format);
+                if (third != 0)
+                    list.add(path+third+format);
+            }
+            else if (n < 1000) {
+                list.add(path+digits[0]+format);
+                list.add(path+100+format);
+
+                int d = n%100;
+
+                if (d == 0) {}
+                else if (d < 20) {
+                    list.add(path+d+format);
+                }
+                else {
+                    list.add(path+second+format);
+
+                    if (third != 0)
+                        list.add(path+third+format);
+                }
             }
         }
         /*else if (l == 3) {
@@ -294,7 +334,7 @@ public class CallingMessegeConsumer implements MessageListener {
                     list.add(path+second+format);
             }
         }
-        /*else if (l == 3) {
+        else if (l == 3) {
             int first = digits[0]*100;
             int second = digits[1]*10;
             int third = digits[2];
@@ -308,7 +348,7 @@ public class CallingMessegeConsumer implements MessageListener {
                 if (third != 0)
                     list.add(path+third+format);
             }
-            else {
+            else if (n < 1000) {
                 if (digits[0] > 1)
                     list.add(path+digits[0]+format);
                 list.add(path+100+format);
@@ -325,7 +365,37 @@ public class CallingMessegeConsumer implements MessageListener {
                         list.add(path+third+format);
                 }
             }
-        }*/
+//            int first = digits[0]*100;
+//            int second = digits[1]*10;
+//            int third = digits[2];
+//            int n = first + second + third;
+//
+//            if (n < 10) {
+//                list.add(path+n+format);
+//            }
+//            else if (n < 100){
+//                list.add(path+second+format);
+//                if (third != 0)
+//                    list.add(path+third+format);
+//            }
+//            else {
+//                if (digits[0] > 1)
+//                    list.add(path+digits[0]+format);
+//                list.add(path+100+format);
+//
+//                int d = n%100;
+//                if (d < 10 && d != 0) {
+//                    list.add(path+d+format);
+//                }
+//                else {
+//                    if (second != 0)
+//                        list.add(path+second+format);
+//
+//                    if (third != 0)
+//                        list.add(path+third+format);
+//                }
+//            }
+        }
         else if (l == 4) {
             int first = digits[0]*1000;
             int second = digits[1]*100;
@@ -370,8 +440,7 @@ public class CallingMessegeConsumer implements MessageListener {
                 }
 
                 int d = n%100;
-                if (d==0) {}
-                else if (d < 10) {
+                if (d==0) {} else if (d < 10) {
                     list.add(path+d+format);
                 }
                 else {
@@ -395,11 +464,14 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachRuDigit(a))
             list.add(s);
 
+
 //        list.add(path+"gotoflooronecabinet"+format);
         if (floor == 1)
             list.add(path+"gotoflooronecabinet"+format);
         else if (floor == 2)
             list.add(path+"gotofloortwocabinet"+format);
+
+//        list.add(path+"cabinet"+format);
 
         for(String s: speachRuDigit(b))
             list.add(s);
@@ -429,6 +501,37 @@ public class CallingMessegeConsumer implements MessageListener {
                 list.add(path+first+format);
                 if (second != 0)
                     list.add(path+second+format);
+            }
+        }
+        else if (l == 3) {
+            int first = digits[0]*100;
+            int second = digits[1]*10;
+            int third = digits[2];
+            int n = first + second + third;
+
+            if (n < 20) {
+                list.add(path+n+format);
+            }
+            else if (n < 100) {
+                list.add(path+second+format);
+                if (third != 0)
+                    list.add(path+third+format);
+            }
+            else if (n < 1000) {
+                list.add(path+first+format);
+
+                int d = n%100;
+
+                if (d == 0) {}
+                else if (d < 20) {
+                    list.add(path+d+format);
+                }
+                else {
+                    list.add(path+second+format);
+
+                    if (third != 0)
+                        list.add(path+third+format);
+                }
             }
         }
         /*else if (l == 3) {
@@ -585,11 +688,11 @@ public class CallingMessegeConsumer implements MessageListener {
             digits[0] = number/10;
             digits[1] = number%10;
         }
-        /*else if (n == 3) {
+        else if (n == 3) {
             digits[0] = number/100;
             digits[1] = (number%100)/10;
             digits[2] = number%10;
-        }*/
+        }
         else if (n == 4) {
             digits[0] = number/1000;
             digits[1] = (number%1000)/100;

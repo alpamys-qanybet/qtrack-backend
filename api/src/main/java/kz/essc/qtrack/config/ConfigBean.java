@@ -13,17 +13,17 @@ import java.util.Scanner;
 
 @RequestScoped
 public class ConfigBean {
-    private final String path = ResourceBean.getConfigPath();
+    private static final String path = ResourceBean.getConfigPath();
 
-    public String get(String key) {
+    public static String get(String key) {
         return getProperty(key);
     }
 
-    public void put(ConfigWrapper w) {
+    public static void put(ConfigWrapper w) {
         putProperty(w.getKey(), w.getValue());
     }
 
-    private JSONObject read() {
+    private static JSONObject read() {
         try {
             /*File file = new File(path);
             Scanner in = new Scanner(file);
@@ -64,7 +64,7 @@ public class ConfigBean {
         return null;
     }
 
-    private String getProperty(String key) {
+    private static String getProperty(String key) {
         try {
             JSONObject json = read();
             return (String) json.get(key);
@@ -76,7 +76,7 @@ public class ConfigBean {
         return null;
     }
 
-    private void putProperty(String key, String value) {
+    private static void putProperty(String key, String value) {
         try {
             System.out.println(value);
             JSONObject json = read();
