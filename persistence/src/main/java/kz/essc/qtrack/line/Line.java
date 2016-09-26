@@ -15,7 +15,7 @@ public class Line implements Serializable {
 
     private long id;
     private String name;
-    private String prefix;
+//    private String prefix;
     private List<User> operators;
     private List<Client> clients;
     private int length = 0; // set zero when clients end
@@ -63,13 +63,13 @@ public class Line implements Serializable {
         this.name = name;
     }
 
-    @Column(name="prefix_")
-    public String getPrefix() {
-        return prefix;
-    }
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
+//    @Column(name="prefix_")
+//    public String getPrefix() {
+//        return prefix;
+//    }
+//    public void setPrefix(String prefix) {
+//        this.prefix = prefix;
+//    }
 
     @OneToMany(mappedBy = "line")
     public List<User> getOperators() {

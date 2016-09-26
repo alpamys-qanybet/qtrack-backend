@@ -160,9 +160,9 @@ public class LineRest {
         return lineBean.translated(list);
     }
 
-    @GET
-    @Path("/available/prefix")
-    public List<LinePrefixWrapper> getAvailablePrefix() {
-        return LinePrefixWrapper.wrap(lineBean.getAvailableLinePrefixes());
-    }
+//    @GET
+//    @Path("/available/prefix")
+//    public List<LinePrefixWrapper> getAvailablePrefix() {
+//        return LinePrefixWrapper.wrap(lineBean.getAvailableLinePrefixes());
+//    }
 }

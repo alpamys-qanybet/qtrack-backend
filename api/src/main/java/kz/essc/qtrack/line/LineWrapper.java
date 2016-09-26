@@ -16,7 +16,7 @@ public class LineWrapper {
 	private int limit;
 	private int limitAdditional;
 	private int addToLimitAdditional = 0;
-	private String prefix;
+//	private String prefix;
 	private Boolean enabled;
 	private String nameKz;
 	private String nameEn;
@@ -110,12 +110,12 @@ public class LineWrapper {
 		this.size = size;
 	}
 
-	public String getPrefix() {
-		return prefix;
-	}
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
+//	public String getPrefix() {
+//		return prefix;
+//	}
+//	public void setPrefix(String prefix) {
+//		this.prefix = prefix;
+//	}
 
 	public Boolean getEnabled() {
 		return enabled;
@@ -283,7 +283,7 @@ public class LineWrapper {
 
 		try {
 			wrapper.setName(line.getName());
-			wrapper.setPrefix(line.getPrefix().toUpperCase());
+//			wrapper.setPrefix(line.getPrefix().toUpperCase());
 			wrapper.setLimit(line.getLimit());
 			wrapper.setLimitAdditional(line.getLimitAdditional());
 			wrapper.setCounter(line.getCounter());
@@ -337,7 +337,7 @@ public class LineWrapper {
 				", counterEnd:" + counterEnd +
 				", length:" + length +
 				", size:" + size +
-				", prefix:'" + prefix + '\'' +
+//				", prefix:'" + prefix + '\'' +
 				", enabled:" + enabled +
 				", nameKz:'" + nameKz + '\'' +
 				", nameEn:'" + nameEn + '\'' +

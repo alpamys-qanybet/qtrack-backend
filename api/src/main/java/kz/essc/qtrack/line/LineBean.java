@@ -93,7 +93,7 @@ public class LineBean {
         try {
             Line line = new Line();
             line.setName(wrapper.getNameEn());
-            line.setPrefix(wrapper.getPrefix());
+//            line.setPrefix(wrapper.getPrefix());
 //            line.setLimit(wrapper.getLimit());
 //            line.setIsRaw();
 
@@ -126,21 +126,21 @@ public class LineBean {
         line.setName(wrapper.getNameKz());
         line.setEnabled(wrapper.getEnabled());
 
-        String prefixOld = line.getPrefix();
-        prefixOld = prefixOld.toLowerCase();
-        LinePrefix lpOld = getPrefix(prefixOld);
-        if (lpOld != null) {
-            lpOld.setLineId(0);
-            em.merge(lpOld);
-        }
-
-        String prefix = wrapper.getPrefix();
-        prefix = prefix.toLowerCase();
-        line.setPrefix(prefix);
-
-        LinePrefix lp = getPrefix(prefix);
-        lp.setLineId(id);
-        em.merge(lp);
+//        String prefixOld = line.getPrefix();
+//        prefixOld = prefixOld.toLowerCase();
+//        LinePrefix lpOld = getPrefix(prefixOld);
+//        if (lpOld != null) {
+//            lpOld.setLineId(0);
+//            em.merge(lpOld);
+//        }
+//
+//        String prefix = wrapper.getPrefix();
+//        prefix = prefix.toLowerCase();
+//        line.setPrefix(prefix);
+//
+//        LinePrefix lp = getPrefix(prefix);
+//        lp.setLineId(id);
+//        em.merge(lp);
 
         line.setCounterBegin(wrapper.getCounterBegin());
         line.setCounterEnd(wrapper.getCounterEnd());
@@ -584,6 +584,7 @@ public class LineBean {
     }
 
     // used only once
+    /*
     private void generatePrefix() {
         char [] a = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
 
@@ -604,9 +605,9 @@ public class LineBean {
                 }
             }
         }
-    }
+    }*/
 
-    public LinePrefix getPrefix(String prefix) {
+    /*public LinePrefix getPrefix(String prefix) {
         try {
             return (LinePrefix) em.createQuery("select l from LinePrefix l where l.name = :name")
                     .setParameter("name", prefix)
@@ -628,5 +629,5 @@ public class LineBean {
 //            e.printStackTrace();
             return new ArrayList<>();
         }
-    }
+    }*/
 }

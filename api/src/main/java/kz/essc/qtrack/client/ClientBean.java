@@ -134,7 +134,8 @@ public class ClientBean {
                     line.setCounter(line.getCounterBegin()); // 0
 
                 int counter = line.getCounter() + 1;
-                String code = generateCode(line.getPrefix(), counter);
+//                String code = generateCode(line.getPrefix(), counter);
+                String code = generateCode(counter);
 
                 int length = line.getLength() + 1;
                 line.setSize(line.getSize()+1);
@@ -189,7 +190,8 @@ public class ClientBean {
                     la.setCounter(line.getCounterBegin()); // 0
 
                 int counter = la.getCounter() + 1;
-                String code = generateCode(line.getPrefix(), counter);
+//                String code = generateCode(line.getPrefix(), counter);
+                String code = generateCode(counter);
 
                 int length = la.getLength() + 1;
 
@@ -635,7 +637,7 @@ public class ClientBean {
         }
     }
 
-    private String generateCode(String prefix, int number) {
+    private String generateCode(int number) { //(String prefix, int number)
     /*
         int third = number%10;
         int second = (number%100)/10;
