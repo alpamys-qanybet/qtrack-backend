@@ -25,6 +25,8 @@ public class Line implements Serializable {
     private int counterEnd = 9999;
     private int limit = 20;
     private int limitAdditional = 0;
+    private int interval = 20;
+    private Boolean app = false;
     private Boolean enabled = false;
     private LineHierarchy lineHierarchy;
     private Date begin;
@@ -141,6 +143,22 @@ public class Line implements Serializable {
     }
     public void setLimitAdditional(int limitAdditional) {
         this.limitAdditional = limitAdditional;
+    }
+
+    @Column(name="interval_")
+    public int getInterval() {
+        return interval;
+    }
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    @Column(name="app_")
+    public Boolean getApp() {
+        return app;
+    }
+    public void setApp(Boolean app) {
+        this.app = app;
     }
 
     @Column(name="enabled_")

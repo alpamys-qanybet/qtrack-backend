@@ -127,12 +127,17 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachEnDigit(a))
             list.add(s);
 
-        if (floor == 1)
-            list.add(path+"gotoflooronecabinet"+format);
-        else if (floor == 2)
-            list.add(path+"gotofloortwocabinet"+format);
+        boolean speachFloorEnabled = Boolean.parseBoolean(ConfigBean.get("speachFloorEnabled"));
 
-//        list.add(path+"cabinet"+format);
+        if (speachFloorEnabled) {
+            if (floor == 1)
+                list.add(path + "gotoflooronecabinet" + format);
+            else if (floor == 2)
+                list.add(path + "gotofloortwocabinet" + format);
+        }
+        else {
+            list.add(path+"cabinet"+format);
+        }
 
         for(String s: speachEnDigit(b))
             list.add(s);
@@ -299,11 +304,14 @@ public class CallingMessegeConsumer implements MessageListener {
 //        list.add(path+"n"+format);
 //        list.add(path+"gotofloorone"+format);
 
-        if (floor == 1)
-            list.add(path+"gotofloorone"+format);
-        else if (floor == 2)
-            list.add(path+"gotofloortwo"+format);
+        boolean speachFloorEnabled = Boolean.parseBoolean(ConfigBean.get("speachFloorEnabled"));
 
+        if (speachFloorEnabled) {
+            if (floor == 1)
+                list.add(path + "gotofloorone" + format);
+            else if (floor == 2)
+                list.add(path + "gotofloortwo" + format);
+        }
 
         for(String s: speachKzDigit(b))
             list.add(s);
@@ -464,14 +472,18 @@ public class CallingMessegeConsumer implements MessageListener {
         for(String s: speachRuDigit(a))
             list.add(s);
 
+        boolean speachFloorEnabled = Boolean.parseBoolean(ConfigBean.get("speachFloorEnabled"));
 
 //        list.add(path+"gotoflooronecabinet"+format);
-        if (floor == 1)
-            list.add(path+"gotoflooronecabinet"+format);
-        else if (floor == 2)
-            list.add(path+"gotofloortwocabinet"+format);
-
-//        list.add(path+"cabinet"+format);
+        if (speachFloorEnabled) {
+            if (floor == 1)
+                list.add(path + "gotoflooronecabinet" + format);
+            else if (floor == 2)
+                list.add(path + "gotofloortwocabinet" + format);
+        }
+        else {
+            list.add(path + "cabinet" + format);
+        }
 
         for(String s: speachRuDigit(b))
             list.add(s);

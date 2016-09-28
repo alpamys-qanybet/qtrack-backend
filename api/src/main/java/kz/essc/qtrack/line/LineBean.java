@@ -35,6 +35,11 @@ public class LineBean {
             wrapper.setNameKz(langBean.getMessage(name, LangBean.Code.kz.toString()));
             wrapper.setNameEn(langBean.getMessage(name, LangBean.Code.en.toString()));
             wrapper.setNameRu(langBean.getMessage(name, LangBean.Code.ru.toString()));
+
+            String nameTicket = "line.ticket." + wrapper.getId() + ".name";
+            wrapper.setTicketNameKz(langBean.getMessage(nameTicket, LangBean.Code.kz.toString()));
+            wrapper.setTicketNameEn(langBean.getMessage(nameTicket, LangBean.Code.en.toString()));
+            wrapper.setTicketNameRu(langBean.getMessage(nameTicket, LangBean.Code.ru.toString()));
         }
         catch (NullPointerException e) {
             e.printStackTrace();
@@ -124,6 +129,8 @@ public class LineBean {
         Line line = (Line) em.find(Line.class, id);
 
         line.setName(wrapper.getNameKz());
+        line.setInterval(wrapper.getInterval());
+        line.setApp(wrapper.getApp());
         line.setEnabled(wrapper.getEnabled());
 
 //        String prefixOld = line.getPrefix();
@@ -211,13 +218,25 @@ public class LineBean {
 
         for (Language lang: langBean.getLanguages()) {
             Message message = langBean.getMessageInstance("line." + line.getId() + ".name", lang.getCode());
+            Message messageTicket = langBean.getMessageInstance("line.ticket." + line.getId() + ".name", lang.getCode());
             message.setLang(lang);
+            messageTicket.setLang(lang);
 
-            if (lang.getCode().equals("kz")) message.setValue(wrapper.getNameKz());
-            else if (lang.getCode().equals("en")) message.setValue(wrapper.getNameEn());
-            else if (lang.getCode().equals("ru")) message.setValue(wrapper.getNameRu());
+            if (lang.getCode().equals("kz")) {
+                message.setValue(wrapper.getNameKz());
+                messageTicket.setValue(wrapper.getTicketNameKz());
+            }
+            else if (lang.getCode().equals("en")) {
+                message.setValue(wrapper.getNameEn());
+                messageTicket.setValue(wrapper.getTicketNameEn());
+            }
+            else if (lang.getCode().equals("ru")) {
+                message.setValue(wrapper.getNameRu());
+                messageTicket.setValue(wrapper.getTicketNameRu());
+            }
 
             em.merge(message);
+            em.merge(messageTicket);
         }
 
         if (!line.getIsRaw()) {

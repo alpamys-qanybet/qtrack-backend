@@ -21,6 +21,9 @@ public class TicketWrapper {
 	private String lineNameKz;
 	private String lineNameEn;
 	private String lineNameRu;
+	private String ticketNameKz;
+	private String ticketNameEn;
+	private String ticketNameRu;
 	private List<String> cabinets;
 	private List<String> operators;
 
@@ -99,6 +102,27 @@ public class TicketWrapper {
 	}
 	public void setLineNameRu(String lineNameRu) {
 		this.lineNameRu = lineNameRu;
+	}
+
+	public String getTicketNameKz() {
+		return ticketNameKz;
+	}
+	public void setTicketNameKz(String ticketNameKz) {
+		this.ticketNameKz = ticketNameKz;
+	}
+
+	public String getTicketNameEn() {
+		return ticketNameEn;
+	}
+	public void setTicketNameEn(String ticketNameEn) {
+		this.ticketNameEn = ticketNameEn;
+	}
+
+	public String getTicketNameRu() {
+		return ticketNameRu;
+	}
+	public void setTicketNameRu(String ticketNameRu) {
+		this.ticketNameRu = ticketNameRu;
 	}
 
 	public List<String> getCabinets() {

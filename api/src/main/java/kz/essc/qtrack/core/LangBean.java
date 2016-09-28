@@ -38,20 +38,37 @@ public class LangBean {
 //                            .setParameter("name", name)
 //                            .setParameter("code", code)
 //                            .getSingleResult();
-        value = (String) em.createQuery("select m.value from Message m where m.name = :name and m.lang = :lang")
+        List<String> values = (List<String>) em.createQuery("select m.value from Message m where m.name = :name and m.lang = :lang")
                 .setParameter("name", name)
                 .setParameter("lang", lang)
-                .getSingleResult();
+                .getResultList();
+
+        if (values.isEmpty())
+            value = "";
+        else
+            value = values.get(0);
 
         return value;
     }
 
     public Message getMessageInstance(String name, String code) {
         Language lang = getLanguage(code);
+        Message message = null;
 
-        return (Message) em.createQuery("select m from Message m where m.name = :name and m.lang = :lang")
+        List<Message> result = (List<Message>) em.createQuery("select m from Message m where m.name = :name and m.lang = :lang")
                                         .setParameter("name", name)
                                         .setParameter("lang", lang)
-                                        .getSingleResult();
+                                        .getResultList();
+
+        if (result.isEmpty()){
+            message = new Message();
+            message.setName(name);
+            message.setLang(lang);
+            message.setValue("");
+            return message;
+        }
+        else {
+            return result.get(0);
+        }
     }
 }

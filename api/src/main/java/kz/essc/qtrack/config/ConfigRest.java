@@ -95,4 +95,10 @@ public class ConfigRest {
         return GenericWrapper.wrap(configBean.get("speachEnabled"));
     }
 
+    @GET
+    @Path("/speachFloorEnabled")
+    public GenericWrapper speachFloorEnabled() {
+        return GenericWrapper.wrap(configBean.get("speachFloorEnabled"));
+    }
+
 }

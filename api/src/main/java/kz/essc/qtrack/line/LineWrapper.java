@@ -17,10 +17,15 @@ public class LineWrapper {
 	private int limitAdditional;
 	private int addToLimitAdditional = 0;
 //	private String prefix;
+	private int interval;
+	private Boolean app;
 	private Boolean enabled;
 	private String nameKz;
 	private String nameEn;
 	private String nameRu;
+	private String ticketNameKz;
+	private String ticketNameEn;
+	private String ticketNameRu;
 	private long lineHierarchyId;
 	private Date begin;
 	private Date end;
@@ -117,6 +122,21 @@ public class LineWrapper {
 //		this.prefix = prefix;
 //	}
 
+
+	public int getInterval() {
+		return interval;
+	}
+	public void setInterval(int interval) {
+		this.interval = interval;
+	}
+
+	public Boolean getApp() {
+		return app;
+	}
+	public void setApp(Boolean app) {
+		this.app = app;
+	}
+
 	public Boolean getEnabled() {
 		return enabled;
 	}
@@ -143,6 +163,27 @@ public class LineWrapper {
 	}
 	public void setNameRu(String nameRu) {
 		this.nameRu = nameRu;
+	}
+
+	public String getTicketNameKz() {
+		return ticketNameKz;
+	}
+	public void setTicketNameKz(String ticketNameKz) {
+		this.ticketNameKz = ticketNameKz;
+	}
+
+	public String getTicketNameEn() {
+		return ticketNameEn;
+	}
+	public void setTicketNameEn(String ticketNameEn) {
+		this.ticketNameEn = ticketNameEn;
+	}
+
+	public String getTicketNameRu() {
+		return ticketNameRu;
+	}
+	public void setTicketNameRu(String ticketNameRu) {
+		this.ticketNameRu = ticketNameRu;
 	}
 
 	public long getLineHierarchyId() {
@@ -286,6 +327,8 @@ public class LineWrapper {
 //			wrapper.setPrefix(line.getPrefix().toUpperCase());
 			wrapper.setLimit(line.getLimit());
 			wrapper.setLimitAdditional(line.getLimitAdditional());
+			wrapper.setInterval(line.getInterval());
+			wrapper.setApp(line.getApp());
 			wrapper.setCounter(line.getCounter());
 			wrapper.setCounterBegin(line.getCounterBegin());
 			wrapper.setCounterEnd(line.getCounterEnd());
@@ -338,10 +381,15 @@ public class LineWrapper {
 				", length:" + length +
 				", size:" + size +
 //				", prefix:'" + prefix + '\'' +
+				", interval:" + interval +
+				", app:" + app +
 				", enabled:" + enabled +
 				", nameKz:'" + nameKz + '\'' +
 				", nameEn:'" + nameEn + '\'' +
 				", nameRu:'" + nameRu + '\'' +
+				", ticketNameKz:'" + ticketNameKz + '\'' +
+				", ticketNameEn:'" + ticketNameEn + '\'' +
+				", ticketNameRu:'" + ticketNameRu + '\'' +
 				", isRaw:"+isRaw;
 
 		if (begin == null)

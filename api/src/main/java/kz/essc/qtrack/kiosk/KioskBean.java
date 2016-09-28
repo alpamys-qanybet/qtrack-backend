@@ -72,6 +72,11 @@ public class KioskBean {
             wrapper.setLineNameKz(langBean.getMessage(name, LangBean.Code.kz.toString()));
             wrapper.setLineNameEn(langBean.getMessage(name, LangBean.Code.en.toString()));
             wrapper.setLineNameRu(langBean.getMessage(name, LangBean.Code.ru.toString()));
+
+            String nameTicket = "line.ticket." + wrapper.getLineId() + ".name";
+            wrapper.setTicketNameKz(langBean.getMessage(nameTicket, LangBean.Code.kz.toString()));
+            wrapper.setTicketNameEn(langBean.getMessage(nameTicket, LangBean.Code.en.toString()));
+            wrapper.setTicketNameRu(langBean.getMessage(nameTicket, LangBean.Code.ru.toString()));
         }
         catch (NullPointerException e) {
             e.printStackTrace();
