@@ -226,6 +226,17 @@ public class KioskRest {
     }
 
     @GET
+    @Path("/infotable/{display}")
+    public GenericWrapper getInfotableInfo(@PathParam("display") int display) {
+        try {
+            return GenericWrapper.wrap(kioskBean.messageOnLaunchInfotable(display));
+        }
+        catch(JSONException e) {
+            return GenericWrapper.wrap("{}");
+        }
+    }
+
+    @GET
     @Path("/operator/{operatorId}")
     public GenericWrapper getOperatorInfo(@PathParam("operatorId") Long operatorId) {
         try {

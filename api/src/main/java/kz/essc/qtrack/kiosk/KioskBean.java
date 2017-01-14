@@ -249,6 +249,20 @@ public class KioskBean {
         return json.toString();
     }
 
+    public String messageOnLaunchInfotable(int display) throws JSONException {
+        JSONObject json = new JSONObject();
+        List<ClientWrapper> list = ClientWrapper.wrap(clientBean.getCalledAndInprocessClients(display));
+        List<LineWrapper> lines = LineWrapper.wrap(lineBean.get());
+        List<OperatorWrapper> operators = OperatorWrapper.wrapInherited(operatorBean.get());
+
+        json.put("event", Event.LAUNCH_INFOTABLE_INFO.toString());
+        json.put("list", new JSONArray(list.toString()));
+        json.put("lines", new JSONArray(lines.toString()));
+        json.put("operators", new JSONArray(operators.toString()));
+
+        return json.toString();
+    }
+
     public long createClient(Long lineId, ClientWrapper clientWrapper) {
         Client client = clientBean.add(lineId, clientWrapper);
 

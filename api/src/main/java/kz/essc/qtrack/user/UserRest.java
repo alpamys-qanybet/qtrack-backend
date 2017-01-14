@@ -64,7 +64,9 @@ public class UserRest {
 	@Path("/{id}")
 	@Transactional
 	public UserWrapper edit(@PathParam("id") Long id, UserWrapper userWrapper) throws IOException {
-		if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
+		String login = request.getUserPrincipal().getName();
+		if (securityBean.hasRole(login, Role.Name.ADMIN) || id == securityBean.getIdByLogin(login)) {
+//		if (securityBean.hasRole(request.getUserPrincipal().getName(), Role.Name.ADMIN)) {
 			return UserWrapper.wrap( userBean.edit(id, userWrapper) );
 		}
 		else {
@@ -123,13 +125,13 @@ public class UserRest {
 	@Path("/{id}/roles")
 	public List<RoleWrapper> getRoles(@PathParam("id") Long id) throws IOException {
 		String login = request.getUserPrincipal().getName();
-		if (securityBean.hasRole(login, Role.Name.ADMIN) || id == securityBean.getIdByLogin(login)) {
+//		if (securityBean.hasRole(login, Role.Name.ADMIN) || id == securityBean.getIdByLogin(login)) {
 			return RoleWrapper.wrap( securityBean.getRoles(id) );
-		}
-		else {
-			response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
-			return null;
-		}
+//		}
+//		else {
+//			response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+//			return null;
+//		}
 	}
 
 	@POST

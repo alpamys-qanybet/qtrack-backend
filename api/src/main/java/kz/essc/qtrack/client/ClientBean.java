@@ -685,6 +685,58 @@ public class ClientBean {
         return list;
     }
 
+    public List<Client> getCalledAndInprocessClients(int display){
+        List<Client> list = new ArrayList<>();
+
+        try {
+//            List<String> statuses = new List<>();
+//            statuses.add("CALLED");
+//            statuses.add("IN_PROCESS");
+
+            Date todayBegin = new Date();
+            todayBegin.setHours(0);
+            todayBegin.setMinutes(0);
+            Date todayEnd = new Date();
+            todayEnd.setHours(23);
+            todayEnd.setMinutes(59);
+
+/*
+            Infotable infotable = (Infotable) em.createQuery("select i from Infotable i where i.display = :display")
+                    .setParameter("display", display)
+                    .getSingleResult();
+
+            list = em.createQuery("select c from Client c " +
+                    "where c.status in :statuses " +
+                    "and c.operator in :operators " +
+                    "and c.date >= :begin and c.date <= :end " +
+                    "order by c.event desc")
+                    .setParameter("statuses", Arrays.asList("CALLED", "IN_PROCESS"))
+                    .setParameter("operators", infotable.getOperators())
+                    .setParameter("begin", todayBegin)
+                    .setParameter("end", todayEnd)
+                    .setMaxResults(12)
+                    .getResultList();
+*/
+
+            list = em.createQuery("select c from Client c " +
+                    "where c.status in :statuses " +
+                    "and c.operator.infotable = :infotable " +
+                    "and c.date >= :begin and c.date <= :end " +
+                    "order by c.event desc")
+                    .setParameter("statuses", Arrays.asList("CALLED", "IN_PROCESS"))
+                    .setParameter("infotable", display)
+                    .setParameter("begin", todayBegin)
+                    .setParameter("end", todayEnd)
+                    .setMaxResults(12)
+                    .getResultList();
+        }
+        catch (NoResultException nre) {
+//            nre.printStackTrace();
+        }
+
+        return list;
+    }
+
     public int toMinutes(Date date){
         int hours = date.getHours();
         int minutes = date.getMinutes();

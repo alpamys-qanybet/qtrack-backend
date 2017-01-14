@@ -37,6 +37,7 @@ public class OperatorBean {
             operator.setShortname(wrapper.getShortname());
 //            operator.setOnline(operatorWrapper.getOnline());
             operator.setDisplay(wrapper.getDisplay());
+            operator.setInfotable(wrapper.getInfotable());
             return em.merge(operator);
         }
         catch (Exception e) {

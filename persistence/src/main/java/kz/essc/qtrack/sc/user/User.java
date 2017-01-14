@@ -2,6 +2,7 @@ package kz.essc.qtrack.sc.user;
 
 import kz.essc.qtrack.client.*;
 import kz.essc.qtrack.client.Process;
+//import kz.essc.qtrack.line.Infotable;
 import kz.essc.qtrack.line.Line;
 
 import javax.persistence.*;
@@ -33,6 +34,9 @@ public class User implements Serializable {
 	private String position;
 	private String cabinet;
 	private int display = 0;
+	private int infotable = 0;
+//	private Infotable infotable;
+
 	private Boolean enabled;
 	private int floor = 1;
 
@@ -118,7 +122,6 @@ public class User implements Serializable {
 	public Client getClient() {
 		return client;
 	}
-
 	public void setClient(Client client) {
 		this.client = client;
 	}
@@ -146,6 +149,23 @@ public class User implements Serializable {
 	public void setDisplay(int display) {
 		this.display = display;
 	}
+
+	@Column(name="infotable_")
+	public int getInfotable() {
+		return infotable;
+	}
+	public void setInfotable(int infotable) {
+		this.infotable = infotable;
+	}
+
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	@JoinColumn(name = "infotable_")
+//	public Infotable getInfotable() {
+//		return infotable;
+//	}
+//	public void setInfotable(Infotable infotable) {
+//		this.infotable = infotable;
+//	}
 
 	@Column(name="floor_")
 	public int getFloor() {

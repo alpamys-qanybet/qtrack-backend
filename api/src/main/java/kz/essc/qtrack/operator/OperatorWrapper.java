@@ -19,6 +19,7 @@ public class OperatorWrapper {
 	private Boolean online;
 	private Boolean enabled;
 	private int display;
+	private int infotable;
 	private Long lineId;
 
 	public long getId() {
@@ -91,6 +92,13 @@ public class OperatorWrapper {
 		this.display = display;
 	}
 
+	public int getInfotable() {
+		return infotable;
+	}
+	public void setInfotable(int infotable) {
+		this.infotable = infotable;
+	}
+
 	public Long getLineId() {
 		return lineId;
 	}
@@ -118,6 +126,7 @@ public class OperatorWrapper {
 			wrapper.setOnline(user.getOnline());
 			wrapper.setStatus(user.getStatus());
 			wrapper.setDisplay(user.getDisplay());
+			wrapper.setInfotable(user.getInfotable());
 			wrapper.setShortname(user.getShortname());
 			wrapper.setLineId(user.getLine().getId());
 		}
@@ -157,6 +166,7 @@ public class OperatorWrapper {
 				", online:" + online +
 				", enabled:" + enabled +
 				", display:" + display +
+				", infotable:" + infotable +
 				", lineId:" + lineId +
 				'}';
 	}
