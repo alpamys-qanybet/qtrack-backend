@@ -240,24 +240,26 @@ public class ClientBean {
         try {
             Date now = new Date();
             Client client = (Client) em.find(Client.class, id);
-            User operator = (User) em.find(User.class, wrapper.getOperatorId());
-            client.setOperator(operator);
 
-            client.setStatus(Client.Status.CALLED.toString());
-            Line line = client.getLine();
+            if (client.getStatus().equals(Client.Status.WAITING.toString())) {
+                User operator = (User) em.find(User.class, wrapper.getOperatorId());
+                client.setOperator(operator);
 
-            List<Client> waitingClients = lineBean.getAvailableClients(line.getId());
-            if (!waitingClients.isEmpty()) {
-                int nextOrder = waitingClients.get(0).getOrder();
-                if ( (nextOrder-1) != client.getOrder() ) {
-                    client.setOrder(nextOrder - 1);
+                client.setStatus(Client.Status.CALLED.toString());
+                Line line = client.getLine();
+
+                List<Client> waitingClients = lineBean.getAvailableClients(line.getId());
+                if (!waitingClients.isEmpty()) {
+                    int nextOrder = waitingClients.get(0).getOrder();
+                    if ( (nextOrder-1) != client.getOrder() ) {
+                        client.setOrder(nextOrder - 1);
+                    }
                 }
-            }
-            client.setEvent(now);
-            client = em.merge(client);
+                client.setEvent(now);
+                client = em.merge(client);
 
-            operator.setClient(client);
-            em.merge(operator);
+                operator.setClient(client);
+                em.merge(operator);
 
 //            JSONObject json = new JSONObject();
 //
@@ -287,9 +289,13 @@ public class ClientBean {
 
 //            wsOperatorDisplayBean.sendMessageOverSocket(jsonDisplay.toString(), "1");
 
-            messageSender.sendMessage(ClientWrapper.wrap(client));
+                messageSender.sendMessage(ClientWrapper.wrap(client));
 
-            return client;
+                return client;
+            }
+            else {
+                return null;
+            }
         }
         catch (Exception e) {
 //            e.printStackTrace();
