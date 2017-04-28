@@ -144,7 +144,8 @@ public class ClientBean {
                 client.setStatus(Client.Status.WAITING.toString());
                 client.setLine(line);
                 client.setCode(code);
-                client.setOrder(length);
+//                client.setOrder(length);
+                client.setOrder(counter - line.getCounterBegin());
                 client.setEvent(now);
                 client.setLang(wrapper.getLang());
 

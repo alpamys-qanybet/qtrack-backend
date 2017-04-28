@@ -2,6 +2,7 @@ package kz.essc.qtrack.kiosk;
 
 import kz.essc.qtrack.client.*;
 import kz.essc.qtrack.client.Process;
+import kz.essc.qtrack.config.ConfigBean;
 import kz.essc.qtrack.core.LangBean;
 import kz.essc.qtrack.line.*;
 import kz.essc.qtrack.operator.OperatorBean;
@@ -59,6 +60,9 @@ public class KioskBean {
     @Inject
     LangBean langBean;
 
+    @Inject
+    ConfigBean configBean;
+
     public List<TicketWrapper> translated(List<TicketWrapper> list) {
         for (TicketWrapper wrapper: list)
             translated(wrapper);
@@ -77,6 +81,10 @@ public class KioskBean {
             wrapper.setTicketNameKz(langBean.getMessage(nameTicket, LangBean.Code.kz.toString()));
             wrapper.setTicketNameEn(langBean.getMessage(nameTicket, LangBean.Code.en.toString()));
             wrapper.setTicketNameRu(langBean.getMessage(nameTicket, LangBean.Code.ru.toString()));
+
+            wrapper.setOrgNameKz(configBean.get("orgnamekz"));
+            wrapper.setOrgNameEn(configBean.get("orgnameen"));
+            wrapper.setOrgNameRu(configBean.get("orgnameru"));
         }
         catch (NullPointerException e) {
             e.printStackTrace();

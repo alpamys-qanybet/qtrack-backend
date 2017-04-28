@@ -37,9 +37,10 @@ public class CallingMessegeConsumer implements MessageListener {
                 ArrayList<String> list = new ArrayList<>();
 
                 if (speachEnabled) {
+                    /*
     //                boolean withPrefix = true;
                         boolean withPostfix = true;
-                    /* switch (code.charAt(0)) {
+                    / * switch (code.charAt(0)) {
                         case '0':
                         case '1':
                         case '2':
@@ -52,7 +53,7 @@ public class CallingMessegeConsumer implements MessageListener {
                         case '9':
                             withPrefix = false;
                             break;
-                    } */
+                    } * /
 
                     switch (cabinet.charAt(cabinet.length() - 1)) {
                         case '0':
@@ -68,6 +69,8 @@ public class CallingMessegeConsumer implements MessageListener {
                             withPostfix = false;
                             break;
                     }
+                    */
+                    boolean withPostfix = false;
 
                     int[] digitsCode, digitsCabinet;
 
@@ -320,6 +323,9 @@ public class CallingMessegeConsumer implements MessageListener {
             list.add(path+"a"+format);
 
         list.add(path+"cabinet"+format);
+
+//        for (String s: list)
+//            System.out.println("*** OUTPUT *** " + s);
 
         return list;
     }

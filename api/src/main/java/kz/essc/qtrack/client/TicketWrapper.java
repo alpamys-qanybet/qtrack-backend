@@ -24,6 +24,9 @@ public class TicketWrapper {
 	private String ticketNameKz;
 	private String ticketNameEn;
 	private String ticketNameRu;
+	private String orgNameKz;
+	private String orgNameEn;
+	private String orgNameRu;
 	private List<String> cabinets;
 	private List<String> operators;
 
@@ -123,6 +126,27 @@ public class TicketWrapper {
 	}
 	public void setTicketNameRu(String ticketNameRu) {
 		this.ticketNameRu = ticketNameRu;
+	}
+
+	public String getOrgNameKz() {
+		return orgNameKz;
+	}
+	public void setOrgNameKz(String orgNameKz) {
+		this.orgNameKz = orgNameKz;
+	}
+
+	public String getOrgNameEn() {
+		return orgNameEn;
+	}
+	public void setOrgNameEn(String orgNameEn) {
+		this.orgNameEn = orgNameEn;
+	}
+
+	public String getOrgNameRu() {
+		return orgNameRu;
+	}
+	public void setOrgNameRu(String orgNameRu) {
+		this.orgNameRu = orgNameRu;
 	}
 
 	public List<String> getCabinets() {

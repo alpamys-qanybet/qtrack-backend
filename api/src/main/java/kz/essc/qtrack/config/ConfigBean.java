@@ -78,7 +78,7 @@ public class ConfigBean {
 
     private static void putProperty(String key, String value) {
         try {
-            System.out.println(value);
+//            System.out.println(value);
             JSONObject json = read();
             if (json.has(key))
                 json.remove(key);
