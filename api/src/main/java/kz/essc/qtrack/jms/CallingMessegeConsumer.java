@@ -689,10 +689,13 @@ public class CallingMessegeConsumer implements MessageListener {
                 play();
             }
         }
-        catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
-        }
-        catch (InterruptedException e) {
+//        catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }

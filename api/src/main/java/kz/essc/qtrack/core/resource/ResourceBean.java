@@ -6,7 +6,8 @@ import java.util.List;
 
 public class ResourceBean {
 //    static final private String dir = "/home/alpamys/Videos";
-    static final private String dir = "D:/server/files/resource";
+    static final private String dir = "/Users/alpamys/dev/app/java/qtrack_files/videos";
+//    static final private String dir = "D:/server/files/resource";
     public static String getDir() {
         return dir;
     }
@@ -15,7 +16,8 @@ public class ResourceBean {
     }
 
 //    static final private String soundPath = "/home/alpamys/Downloads/numbers";
-    static final private String soundPath = "D:/server/numbers";
+    static final private String soundPath = "/Users/alpamys/dev/app/java/qtrack_files/numbers";
+//    static final private String soundPath = "D:/server/numbers";
     public static String getSoundPath() {
         return soundPath;
     }
@@ -30,7 +32,8 @@ public class ResourceBean {
 */
 
 //    static final String configPath = "/home/alpamys/dev/qtrack.config.json";
-    static final String configPath = "D:/server/files/qtrack.config.json";
+    static final String configPath = "/Users/alpamys/dev/app/java/qtrack_files/config/qtrack.config.json";
+//    static final String configPath = "D:/server/files/qtrack.config.json";
     public static String getConfigPath() {
         return configPath;
     }

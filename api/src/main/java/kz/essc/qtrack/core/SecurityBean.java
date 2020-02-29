@@ -2,7 +2,8 @@ package kz.essc.qtrack.core;
 
 import kz.essc.qtrack.sc.user.Role;
 import kz.essc.qtrack.sc.user.User;
-import sun.misc.BASE64Encoder;
+//import sun.misc.BASE64Encoder;
+import java.util.Base64;
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,8 +40,11 @@ public class SecurityBean {
 		}
 		byte[] rawData = digest.digest();
 
-		BASE64Encoder bencoder = new BASE64Encoder();
-		return bencoder.encode(rawData);
+//		BASE64Encoder bencoder = new BASE64Encoder();
+//		return bencoder.encode(rawData);
+
+//		return Base64.getEncoder().encodeToString(input.getBytes());
+		return Base64.getEncoder().encodeToString(rawData);
 	}
 
 	public boolean hasRole(String login, Role.Name role) {
